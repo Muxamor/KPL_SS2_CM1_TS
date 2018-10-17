@@ -224,6 +224,54 @@ void USART3_Init(void){
   	LL_USART_Enable(USART3);
 }
 
+/**
+  * @brief  Setup I2C.
+  * @param  None
+  * @retval None
+*/
+void I2C1_Init(void){
+
+	LL_I2C_InitTypeDef I2C_InitStruct;
+
+  	LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+  	/* Peripheral clock enable */
+  	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_I2C1);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  
+  	/**I2C1 GPIO Configuration  
+  	PB6   ------> I2C1_SCL
+  	PB7   ------> I2C1_SDA 
+  	*/
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+  	GPIO_InitStruct.Alternate = LL_GPIO_AF_4;
+  	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    /**I2C Initialization 
+    */
+  	LL_I2C_EnableAutoEndMode(I2C1);
+	LL_I2C_DisableOwnAddress2(I2C1);
+  	LL_I2C_DisableGeneralCall(I2C1);
+  	LL_I2C_EnableClockStretching(I2C1);
+
+  	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
+  	I2C_InitStruct.Timing = 0x00702991;// 0x10909CEC; - Frequenci I2C=100 kHz  //0x00702991; - Frequenci I2C=400 kHz
+  	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
+  	I2C_InitStruct.DigitalFilter = 0;
+  	I2C_InitStruct.OwnAddress1 = 0;
+  	I2C_InitStruct.TypeAcknowledge = LL_I2C_ACK; //LL_I2C_NACK 
+  	I2C_InitStruct.OwnAddrSize = LL_I2C_OWNADDRESS1_7BIT;
+  	LL_I2C_Init(I2C1, &I2C_InitStruct);
+
+  	LL_I2C_SetOwnAddress2(I2C1, 0, LL_I2C_OWNADDRESS2_NOMASK);
+
+  	LL_I2C_Enable(I2C1);
+}
+
 
 /**
   * @brief  This function setup Watch Dog.
