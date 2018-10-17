@@ -119,34 +119,109 @@ void SystemClock_Config(void){
 	NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),15, 0));
 }
 
+void USART1_Init(void){
 
-/**
-  * @brief  This function setup  Led on the KTIVT_SS_board.
-  * @retval None
-*/
-void SetupLED(void){
+  	LL_USART_InitTypeDef USART_InitStruct;
+  	LL_GPIO_InitTypeDef GPIO_InitStruct;
 
-	LL_GPIO_InitTypeDef GPIO_InitStruct;
+  	/* Peripheral clock enable */
+  	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+  
+  	/**USART1 GPIO Configuration  
+  	PA9   ------> USART1_TX
+  	PA10   ------> USART1_RX 
+  	*/
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_9|LL_GPIO_PIN_10;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+  	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	/* GPIO Ports Clock Enable */
-	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+  	/* USART1 configured as follow:
+            - BaudRate = 5000000
+            - Word Length = 9 Bits
+            - One Stop Bit
+            - No parity
+            - Hardware flow control disabled (RTS and CTS signals)
+            - Receive and transmit enabled
+      */
+  	USART_InitStruct.BaudRate = 5000000;
+  	USART_InitStruct.DataWidth =  LL_USART_DATAWIDTH_9B;
+  	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+  	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+  	USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+  	USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+  	USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
+  	LL_USART_Init(USART1, &USART_InitStruct);
 
-	 /*Configure LED_Yellow_HL1 (PC10), LED_Green_HL2 (PC11), LED_Green_HL3 (PC12) as output Push-Pull      */
-	GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11|LL_GPIO_PIN_12;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  	//LL_USART_SetTXRXSwap(USART1, LL_USART_TXRX_SWAPPED);
 
-	/* Diode is off */
-	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10|LL_GPIO_PIN_11|LL_GPIO_PIN_12);
+  	LL_USART_ConfigAsyncMode(USART1); 
+  	LL_USART_Enable(USART1);
 
-	/*For ON/OFF LED need to use function:                            */
-	  /*LED_Yellow_HL1_ON()       LED_Yellow_HL1_OFF()                */
-	  /*LED_Green_HL2_ON()        LED_Green_HL2_OFF()                 */
-	  /*LED_Green_HL3_ON()        LED_Green_HL3_OFF()                 */
-	  /*Define in SetupPeriph.h                                       */
+    /* Configure pins RE and TE to control transfer data throughISO3086DW, PA11=DE PA12=RE */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_11|LL_GPIO_PIN_12;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    /**/
+    //RE -Enable when low
+    //TE - Enbale when high
+    LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_11); //Enable receive data
+    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12); //Enable transmit data
+
+}
+
+
+void USART3_Init(void){
+
+  	LL_USART_InitTypeDef USART_InitStruct;
+  	LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+  	/* Peripheral clock enable */
+  	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  
+  	/**USART1 GPIO Configuration  
+  	PB10   ------> USART3_TX
+  	PB11  ------> USART3_RX 
+  	*/
+  	GPIO_InitStruct.Pin = LL_GPIO_PIN_10|LL_GPIO_PIN_11;
+  	GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
+  	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  	GPIO_InitStruct.Alternate = LL_GPIO_AF_7;
+  	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  	/* USART3 configured as follow:
+            - BaudRate = 5000000
+            - Word Length = 9 Bits
+            - One Stop Bit
+            - No parity
+            - Hardware flow control disabled (RTS and CTS signals)
+            - Receive and transmit enabled
+      */
+  	USART_InitStruct.BaudRate = 5000000;
+  	USART_InitStruct.DataWidth =  LL_USART_DATAWIDTH_9B;
+  	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+  	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+  	USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+  	USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+  	USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
+  	LL_USART_Init(USART3, &USART_InitStruct);
+
+  	//LL_USART_SetTXRXSwap(USART3, LL_USART_TXRX_SWAPPED);
+  	LL_USART_SetRXPinLevel(USART3, LL_USART_RXPIN_LEVEL_INVERTED);
+  	LL_USART_SetTXPinLevel(USART3, LL_USART_RXPIN_LEVEL_INVERTED);
+
+  	LL_USART_ConfigAsyncMode(USART3); 
+  	LL_USART_Enable(USART3);
 }
 
 

@@ -16,6 +16,8 @@ int main(void){
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
+	USART1_Init();
+	USART3_Init();
 
 
 

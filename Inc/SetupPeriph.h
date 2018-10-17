@@ -11,6 +11,8 @@
 
 void LL_Init(void);
 void SystemClock_Config(void);
+void USART1_Init(void);
+void USART3_Init(void);
 void MX_IWDG_Init(void);
 
 /*The table below gives the allowed values of the pre-emption priority and subpriority according

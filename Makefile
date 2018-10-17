@@ -6,7 +6,7 @@ TARGET = KPL_SS2_CM1_TS
 
 
 # Set the FLAG OS_SYSTEM - LINUX or MAC_OS it depends which sistem are you use to build.
-BUILD_OS_SYSTEM = LINUX
+BUILD_OS_SYSTEM = MAC_OS
 
 
 ######################################
