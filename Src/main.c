@@ -2,6 +2,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "SetupPeriph.h"
+#include "i2c_cm.h"
 
 #include  <stdio.h>
 
