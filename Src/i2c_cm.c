@@ -12,6 +12,39 @@
 
 #include  <stdio.h>
 
+
+/**
+  * @brief  Wriete register in TCA9554PWR
+  * @param  I2C_TypeDef *I2Cx  -- Number port I2C
+  			SlaveAddr_IC - Address Slave IC on bus I2C
+  			addr_reg - Address registr TCA9554PWR
+  			value - value to write to registry
+  * @retval An ErrorStatus enumeration
+  *          - SUCCESS: 
+  *          - ERROR:   Not applicable
+  */
+
+ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint8_t value){
+
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 2,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, addr_reg);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, value);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	while(LL_I2C_IsActiveFlag_TC(I2Cx)==RESET);
+
+	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+	return SUCCESS;
+}
+
+
 /**
   * @brief  Read address analog module throught I2C TCA9554PWR
   * @param  namber_value

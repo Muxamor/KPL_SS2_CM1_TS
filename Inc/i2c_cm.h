@@ -10,6 +10,7 @@
  extern void _Error_Handler(char *, int);
 
 // uint8_t I2C_Read_addr_a_module(I2C_TypeDef *I2Cx,uint32_t SlaveAddr);
+ ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint8_t value);
 
 #ifdef __cplusplus
 }

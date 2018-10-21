@@ -20,6 +20,8 @@ int main(void){
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00);
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00);
 
 
 
