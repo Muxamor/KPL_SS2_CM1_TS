@@ -21,9 +21,8 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 
-	I2C_write_reg_DS3232(I2C1, 0x68, 03, 50);
- 	I2C_read_reg_DS3232(I2C1, 0x68, 03);
-
+	//I2C_write_reg_DS3232(I2C1, 0x68, 03, 5);
+ 	//I2C_read_reg_DS3232(I2C1, 0x68, 03);
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
