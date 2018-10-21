@@ -38,12 +38,115 @@ ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint
 	LL_I2C_TransmitData8(I2Cx, value);
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
-//	while(LL_I2C_IsActiveFlag_TC(I2Cx)==RESET);
+	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+	return SUCCESS;
+}
+
+
+ErrorStatus I2C_write_reg_8bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint8_t value){
+
+	SlaveAddr_IC = SlaveAddr_IC<<1;
+
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 2,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, addr_reg);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, value);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
 	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
 
 	LL_I2C_ClearFlag_STOP(I2Cx);
 	return SUCCESS;
+}
+
+
+ErrorStatus I2C_write_reg_16bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint16_t value){
+
+	SlaveAddr_IC = SlaveAddr_IC<<1;
+
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 3,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, addr_reg);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, (uint8_t)value);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, ( (uint8_t)(value>>8) ) );
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+	return SUCCESS;
+
+}
+
+uint8_t I2C_read_reg_8bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg){
+
+	uint8_t read_data;
+
+	SlaveAddr_IC = SlaveAddr_IC<<1;
+
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 1,LL_I2C_MODE_SOFTEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, addr_reg);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+	while(LL_I2C_IsActiveFlag_TC(I2Cx)==RESET);
+
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ); //LL_I2C_MODE_SOFTEND
+
+	while(LL_I2C_IsActiveFlag_RXNE(I2Cx)==RESET);
+
+	read_data = LL_I2C_ReceiveData8(I2Cx);
+
+	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	return read_data;
+}
+
+uint16_t I2C_read_reg_16bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg){
+
+	uint8_t read_data[2], i=0;
+	uint16_t ret;
+
+	SlaveAddr_IC = SlaveAddr_IC<<1;
+
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 1,LL_I2C_MODE_SOFTEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+
+	LL_I2C_TransmitData8(I2Cx, addr_reg);
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+	while(LL_I2C_IsActiveFlag_TC(I2Cx)==RESET);
+
+	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC, LL_I2C_ADDRSLAVE_7BIT, 2, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ); //LL_I2C_MODE_SOFTEND
+
+	while(!LL_I2C_IsActiveFlag_STOP(I2Cx)){
+
+		if(LL_I2C_IsActiveFlag_RXNE(I2Cx)){
+			read_data[i] = LL_I2C_ReceiveData8(I2Cx);
+			i++;
+		}
+	}
+
+	LL_I2C_ClearFlag_STOP(I2Cx);
+
+	ret = (read_data[1]<<8);
+	ret = ret | read_data[0];
+
+	return ret;
 }
 
 
