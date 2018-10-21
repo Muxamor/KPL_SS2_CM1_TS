@@ -45,7 +45,10 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_utils.c \
 Src/system_stm32l4xx.c \
 Src/SetupPeriph.c \
 Src/i2c_cm.c \
-Src/analog_mod_control.c
+Src/uart_comm.c \
+Src/analog_mod_control.c \
+Src/control_module.c
+
 
 
 # ASM sources

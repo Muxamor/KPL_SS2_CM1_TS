@@ -119,6 +119,67 @@ void SystemClock_Config(void){
 	NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),15, 0));
 }
 
+/**
+  * @brief  This function setup GPIO to control IC on the KTIVT_SS_board.
+  * @retval None
+*/
+void SetupGPIO(void){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+	/* GPIO Ports Clock Enable */
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
+	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
+
+
+	/* Configure pins out for control preamplifier K1. PA3=10 PA4=100 PA5=1000 for AG1411 ON=0 OFF=1    */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_13;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+
+
+/*
+
+  * @brief  Configure gpio mode for a dedicated pin on dedicated port.
+  * @note   I/O mode can be Input mode, General purpose output, Alternate function mode or Analog.
+  * @note   Warning: only one pin can be passed as parameter.
+  * @rmtoll MODER        MODEy         LL_GPIO_SetPinMode
+  * @param  GPIOx GPIO Port
+  * @param  Pin This parameter can be one of the following values:
+  *         @arg @ref LL_GPIO_PIN_0
+  *         @arg @ref LL_GPIO_PIN_1
+  *         @arg @ref LL_GPIO_PIN_2
+  *         @arg @ref LL_GPIO_PIN_3
+  *         @arg @ref LL_GPIO_PIN_4
+  *         @arg @ref LL_GPIO_PIN_5
+  *         @arg @ref LL_GPIO_PIN_6
+  *         @arg @ref LL_GPIO_PIN_7
+  *         @arg @ref LL_GPIO_PIN_8
+  *         @arg @ref LL_GPIO_PIN_9
+  *         @arg @ref LL_GPIO_PIN_10
+  *         @arg @ref LL_GPIO_PIN_11
+  *         @arg @ref LL_GPIO_PIN_12
+  *         @arg @ref LL_GPIO_PIN_13
+  *         @arg @ref LL_GPIO_PIN_14
+  *         @arg @ref LL_GPIO_PIN_15
+  * @param  Mode This parameter can be one of the following values:
+  *         @arg @ref LL_GPIO_MODE_INPUT
+  *         @arg @ref LL_GPIO_MODE_OUTPUT
+  *         @arg @ref LL_GPIO_MODE_ALTERNATE
+  *         @arg @ref LL_GPIO_MODE_ANALOG
+  * @retval None
+  *//*
+__STATIC_INLINE void LL_GPIO_SetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t Mode)
+*/
+}
+
 void USART1_Init(void){
 
   	LL_USART_InitTypeDef USART_InitStruct;

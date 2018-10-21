@@ -3,6 +3,7 @@
 #include "main.h"
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
+#include "uart_comm.h"
 
 #include  <stdio.h>
 
@@ -20,6 +21,27 @@ int main(void){
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
+
+
+///Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
+
+	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+	uint16_t massiv[4];
+
+	massiv[0] = 0x0100;
+	massiv[1] = 0x00FF;
+	massiv[2] = 0x0000;
+	massiv[3] = 0x0000;
+	Data_transmite_UART_9B (massiv, USART1);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 	//I2C_write_reg_DS3232(I2C1, 0x68, 03, 5);
  	//I2C_read_reg_DS3232(I2C1, 0x68, 03);
