@@ -77,10 +77,10 @@ ErrorStatus I2C_write_reg_16bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, 
 	LL_I2C_TransmitData8(I2Cx, addr_reg);
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
-	LL_I2C_TransmitData8(I2Cx, (uint8_t)value);
+	LL_I2C_TransmitData8(I2Cx, (uint8_t)(value>>8)); //byte1
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
-	LL_I2C_TransmitData8(I2Cx, ( (uint8_t)(value>>8) ) );
+	LL_I2C_TransmitData8(I2Cx, (uint8_t) value ); //byte2
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
 	while(LL_I2C_IsActiveFlag_STOP(I2Cx)==RESET);
@@ -143,8 +143,7 @@ uint16_t I2C_read_reg_16bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint
 
 	LL_I2C_ClearFlag_STOP(I2Cx);
 
-	ret = (read_data[1]<<8);
-	ret = ret | read_data[0];
+	ret = (read_data[0]<<8) | read_data[1];
 
 	return ret;
 }
