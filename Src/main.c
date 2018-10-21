@@ -21,6 +21,9 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 
+	I2C_write_reg_DS3232(I2C1, 0x68, 03, 50);
+ 	I2C_read_reg_DS3232(I2C1, 0x68, 03);
+
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
@@ -30,9 +33,10 @@ int main(void){
 	//I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
 	//I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x26
 
+	//Default setup temperature senser TMP75
 	uint8_t add_TMP75 = 0x48;
 	for(/*empty*/; add_TMP75 < 0x4E; add_TMP75++){ // Setup all temperatura IC TMP75 Block 1
-		//Default setup temperature senser TMP75
+		
 		I2C_write_reg_8bit_TMP75(I2C1, add_TMP75, 0x01, 0x00); //Configuration registr addr=0x01 TMP75: OS R1R0 F1F0 POL TM SD
 													           // OS=0   R1R0 = 00 00   F1F0 = 00 00   POL = 00   TM = 00  SD = 00
 		//Write Tlow registr addr=0x02 Tlow=30 in 12bit resolution = 0x1E0
@@ -41,6 +45,10 @@ int main(void){
 		//Write Thigh registr addr=0x03 Thigh=40 in 12bit resolution = 0x280
 		I2C_write_reg_16bit_TMP75(I2C1, add_TMP75, 0x03, (0x280 << 4) );
 	}
+
+
+
+
 
 }
 

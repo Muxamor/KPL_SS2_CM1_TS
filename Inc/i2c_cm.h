@@ -17,6 +17,9 @@
  uint8_t I2C_read_reg_8bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg);
  uint16_t I2C_read_reg_16bit_TMP75(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg);
 
+ ErrorStatus I2C_write_reg_DS3232(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint8_t value);
+ uint8_t I2C_read_reg_DS3232(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg);
+
 #ifdef __cplusplus
 }
 #endif
