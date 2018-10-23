@@ -19,24 +19,24 @@ int main(void){
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	USART1_Init();
-	//USART3_Init();
-///	I2C1_Init();
+	USART3_Init();
+	I2C1_Init();
 
 
 ///Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
+	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
 
 	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
 	uint16_t massiv[4];
 
-	massiv[0] = 0x00AA;
+	massiv[0] = 0x0100;
 	massiv[1] = 0x00FF;
-	massiv[2] = 0x00BB;
-	massiv[3] = 0x00CC;
+	massiv[2] = 0x0000;
+	massiv[3] = 0x0000;
 	Data_transmite_UART_9B (massiv, USART1);
-while(1);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
