@@ -25,16 +25,16 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
 
-	for ( uint8_t i=0 ; i<4; i++ ){
-
-		counter=0;
-		while( LL_USART_IsActiveFlag_TXE(USARTx) == RESET ){
-			counter++;
-			if(counter==1000000){//150ms
-				Error_Handler();
-				goto exit_error;
-			}
+	counter=0;
+	while( LL_USART_IsActiveFlag_TXE(USARTx) == RESET ){
+		counter++;
+		if(counter==1000000){//150ms
+			Error_Handler();
+			goto exit_error;
 		}
+	}
+
+	for ( uint8_t i=0 ; i<4; i++ ){
 
 		if (i==0){
 			LL_USART_TransmitData9( USARTx, 0x100 | mass[i] );//set 9 bit for command (first) bite 
@@ -43,15 +43,16 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], USART_TypeDef *USARTx){
 			LL_USART_TransmitData9( USARTx, mass[i] );
 
 		}
-	}
 
-	counter=0;
-	while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
-		counter++;
-		if(counter==1000000){//150ms
-			Error_Handler();
-			goto exit_error;
+		counter=0;
+		while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
+			counter++;
+			if(counter==1000000){//150ms
+				Error_Handler();
+				goto exit_error;
+			}
 		}
+
 	}
 
 	return SUCCESS;

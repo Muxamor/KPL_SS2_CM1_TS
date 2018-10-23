@@ -31,12 +31,17 @@ int main(void){
 	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
 	uint16_t massiv[4];
 
-	massiv[0] = 0x00AA;
+//while(1){
+	LL_mDelay(40000);
+	massiv[0] = 0x0000;
 	massiv[1] = 0x00FF;
 	massiv[2] = 0x00BB;
 	massiv[3] = 0x00CC;
+
 	Data_transmite_UART_9B (massiv, USART1);
-while(1);
+//}
+	while(1);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
