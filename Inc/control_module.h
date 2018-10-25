@@ -8,6 +8,8 @@
 
  extern void _Error_Handler(char *, int);
 
+ void Default_Setup_CM(void);
+
 
 
 #ifdef __cplusplus

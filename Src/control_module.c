@@ -17,16 +17,11 @@
 
 /**
   * @brief  Default setup control module 
-  * @param  I2C_TypeDef *I2Cx  -- Number port I2C
-  			SlaveAddr_IC - Address Slave IC on bus I2C
-  			addr_reg - Address registr TCA9554PWR
-  			value - value to write to registry
-  * @retval An ErrorStatus enumeration
-  *          - SUCCESS: 
-  *          - ERROR:   Not applicable
+  * @param  void
+  * @retval void
   */
 
-ErrorStatus Default_Setup_CM(void){
+void Default_Setup_CM(void){
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
@@ -49,8 +44,4 @@ ErrorStatus Default_Setup_CM(void){
 		I2C_write_reg_16bit_TMP75(I2C1, add_TMP75, 0x03, (0x280 << 4) );
 	}
 
-
-
-
-	return SUCCESS;
 }
