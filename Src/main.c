@@ -9,6 +9,9 @@
 
 /****************************TODO*************************
 1. Check first front signal I2C on the board. Speed = 400kHz 
+
+2. All i2c function have infinity while() NEED  write protect. 
+	It will be problem if broken IC i2C
 **********************************************************/
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
@@ -22,42 +25,13 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 
-
-///Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
-
-	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
-	uint16_t massiv[4];
-
-//while(1){
-	LL_mDelay(40000);
-	massiv[0] = 0x0000;
-	massiv[1] = 0x00FF;
-	massiv[2] = 0x00BB;
-	massiv[3] = 0x00CC;
-
-	Data_transmite_UART_9B (massiv, USART1);
-//}
-	while(1);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-	//I2C_write_reg_DS3232(I2C1, 0x68, 03, 5);
- 	//I2C_read_reg_DS3232(I2C1, 0x68, 03);
-
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
-	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
-	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x20
+	///I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
+	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x20
 	//Address IC TCA9554 = 0x26
-	//I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
-	//I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x26
+	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
+	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x26
 
 	//Default setup temperature senser TMP75
 	uint8_t add_TMP75 = 0x48;
@@ -77,5 +51,28 @@ int main(void){
 
 
 }
+
+
+
+/*//Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
+	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
+
+	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+	uint16_t massiv[4];
+
+//while(1){
+	LL_mDelay(40000);
+	massiv[0] = 0x0000;
+	massiv[1] = 0x00FF;
+	massiv[2] = 0x00BB;
+	massiv[3] = 0x00CC;
+
+	Data_transmite_UART_9B (massiv, USART1);
+//}
+	while(1);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 

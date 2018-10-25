@@ -27,13 +27,30 @@
 ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint8_t addr_reg, uint8_t value){
 
 	SlaveAddr_IC = SlaveAddr_IC<<1;
+	uint32_t counter;
 
-	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET); 
+	counter=0;
+	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET){
+		counter++;
+		if(counter==1000000){//aproximate 150ms
+			Error_Handler();
+			goto exit_error;
+		}
+	}
+
 	LL_I2C_HandleTransfer(I2Cx, SlaveAddr_IC,LL_I2C_ADDRSLAVE_7BIT, 2,LL_I2C_MODE_AUTOEND,LL_I2C_GENERATE_START_WRITE ); //LL_I2C_GENERATE_START_READ
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
 
 	LL_I2C_TransmitData8(I2Cx, addr_reg);
-	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
+	counter=0;
+	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET){
+		counter++;
+		if(counter==1000000){//aproximate 150ms
+			LL_I2C_ClearFlag_TXE(I2Cx);
+			Error_Handler();
+			goto exit_error;
+		}
+	}
 
 	LL_I2C_TransmitData8(I2Cx, value);
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET);
@@ -42,6 +59,9 @@ ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint
 
 	LL_I2C_ClearFlag_STOP(I2Cx);
 	return SUCCESS;
+
+	exit_error:
+		return ERROR;
 }
 
 
