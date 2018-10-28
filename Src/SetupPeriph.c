@@ -120,7 +120,7 @@ void SystemClock_Config(void){
 }
 
 /**
-  * @brief  This function setup GPIO to control IC on the KTIVT_SS_board.
+  * @brief  This function setup GPIO .
   * @retval None
 */
 void SetupGPIO(void){
@@ -134,7 +134,7 @@ void SetupGPIO(void){
   	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
 
 
-	/* Configure pins out for control preamplifier K1. PA3=10 PA4=100 PA5=1000 for AG1411 ON=0 OFF=1    */
+	/* Enable/Sisable global clock  */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_13;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
@@ -143,41 +143,152 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 	
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+	/*For change mode D0..D15 need use  */
+	/*Enable_IO0_global_clock()    		*/
+	/*Disable_IO0_global_clock()    	*/
 
 
-/*
+	/* Configure data D0..D15 ISA port       */
+	/* D0..D7 = PA0..PA7, D8..D15 = PC0..PC7 */ 
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  * @brief  Configure gpio mode for a dedicated pin on dedicated port.
-  * @note   I/O mode can be Input mode, General purpose output, Alternate function mode or Analog.
-  * @note   Warning: only one pin can be passed as parameter.
-  * @rmtoll MODER        MODEy         LL_GPIO_SetPinMode
-  * @param  GPIOx GPIO Port
-  * @param  Pin This parameter can be one of the following values:
-  *         @arg @ref LL_GPIO_PIN_0
-  *         @arg @ref LL_GPIO_PIN_1
-  *         @arg @ref LL_GPIO_PIN_2
-  *         @arg @ref LL_GPIO_PIN_3
-  *         @arg @ref LL_GPIO_PIN_4
-  *         @arg @ref LL_GPIO_PIN_5
-  *         @arg @ref LL_GPIO_PIN_6
-  *         @arg @ref LL_GPIO_PIN_7
-  *         @arg @ref LL_GPIO_PIN_8
-  *         @arg @ref LL_GPIO_PIN_9
-  *         @arg @ref LL_GPIO_PIN_10
-  *         @arg @ref LL_GPIO_PIN_11
-  *         @arg @ref LL_GPIO_PIN_12
-  *         @arg @ref LL_GPIO_PIN_13
-  *         @arg @ref LL_GPIO_PIN_14
-  *         @arg @ref LL_GPIO_PIN_15
-  * @param  Mode This parameter can be one of the following values:
-  *         @arg @ref LL_GPIO_MODE_INPUT
-  *         @arg @ref LL_GPIO_MODE_OUTPUT
-  *         @arg @ref LL_GPIO_MODE_ALTERNATE
-  *         @arg @ref LL_GPIO_MODE_ANALOG
-  * @retval None
-  *//*
-__STATIC_INLINE void LL_GPIO_SetPinMode(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t Mode)
-*/
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/*For change mode D0..D15 need use  */
+	/*Set_Output_mode_D0_D7()   		*/
+	/*Set_Output_mode_D8_D15()   		*/
+	/*8Set_Input_mode_D0_D7()    		*/
+	/*Set_Iutput_mode_D8_D15()  		*/
+
+
+	/* Configure CLK300 (PC8)       */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8);
+
+	/*For set/reset CLK300 need use  */
+	/*Set_CLK300()   	             */
+	/*Reset_CLK300()   		         */
+
+	/* Configure CLK302_1 (PC10)       */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);
+
+	/*For set/reset CLK302_1 need use  */
+	/*Set_CLK302_1()   				   */
+	/*Reset_CLK302_1()   	       	   */
+
+
+	/* Configure CLK302_2 (PC11)       */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_11;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);
+
+	/*For set/reset CLK302_2 need use  */
+	/*Set_CLK302_2()   				   */
+	/*Reset_CLK302_2()   	       	   */
+
+
+	/* Configure CLK302_3 (PC12)       */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12);
+
+	/*For set/reset CLK302_3 need use  */
+	/*Set_CLK302_3()   				   */
+	/*Reset_CLK302_3()   	       	   */
+
+
+	/* Configure CLK304               */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);
+
+	/*For set/reset CLK304   need use  */
+	/*Set_CLK304()   				   */
+	/*Reset_CLK304()   	       	  	   */
+
+
+	/* Configure EN304               */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_8);
+
+	/*For set/reset CLK304   need use  */
+	/*Set_EN304()   				   */
+	/*Reset_EN304()   	       	  	   */
+
+
+	/* Configure RST304               */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+
+	LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);
+
+	/*For set/reset CLK304   need use  */
+	/*Set_RST304()   				   */
+	/*Reset_RST304()   	       	  	   */
+
+
+	/* Configure CLK306               */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);
+
+	/*For set/reset CLK306   need use  */
+	/*Set_RST306()   				   */
+	/*Reset_RST306()   	       	  	   */
+
 }
 
 void USART1_Init(void){

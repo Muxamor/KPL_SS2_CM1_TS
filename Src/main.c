@@ -23,6 +23,7 @@ int main(void){
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
+	SetupGPIO();
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
@@ -36,7 +37,7 @@ int main(void){
 
 }
 
-
+ 
 
 /*//Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
 

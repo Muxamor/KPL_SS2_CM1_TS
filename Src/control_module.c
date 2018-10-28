@@ -7,8 +7,9 @@
 
 
 #include "stm32l4xx.h"
-#include "SetupPeriph.h"
 #include "stm32l4xx_ll_i2c.h"
+#include "stm32l4xx_ll_gpio.h"
+#include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "control_module.h"
 
@@ -22,6 +23,21 @@
   */
 
 void Default_Setup_CM(void){
+
+	Disable_IO0_global_clock();
+	Set_Output_mode_D0_D7(); 		
+	Set_Output_mode_D8_D15();   
+
+	Reset_CLK300();
+	Reset_CLK302_1();		
+	Reset_CLK302_2();
+	Reset_CLK302_3();
+	Reset_CLK304();
+	Set_EN304();
+	Set_RST304();
+	Reset_CLK306();
+
+
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
