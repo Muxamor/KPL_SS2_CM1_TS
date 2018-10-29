@@ -243,6 +243,7 @@ void SetupGPIO(void){
 	/*For set/reset CLK304   need use  */
 	/*Set_CLK304()   				   */
 	/*Reset_CLK304()   	       	  	   */
+	/*Pulse_CLK304()				   */
 
 
 	/* Configure EN304               */
@@ -288,6 +289,9 @@ void SetupGPIO(void){
 	/*For set/reset CLK306   need use  */
 	/*Set_RST306()   				   */
 	/*Reset_RST306()   	       	  	   */
+
+
+
 
 }
 
@@ -443,6 +447,69 @@ void I2C1_Init(void){
 
   	LL_I2C_Enable(I2C1);
 }
+
+
+/**
+  * @brief  This function setup interrupts for all ports and inside event .
+  * @param  None
+  * @retval None
+*/
+void SetupInterrupt(void){
+	
+    LL_EXTI_InitTypeDef EXTI_InitStruct;
+
+  	/*Setup interrupt INT3(PB2) RISING EDGE*/
+    LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTB, LL_SYSCFG_EXTI_LINE2);
+
+    EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_2;
+    EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
+    EXTI_InitStruct.LineCommand = ENABLE;
+    EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+    EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
+    LL_EXTI_Init(&EXTI_InitStruct);
+
+    LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_2, LL_GPIO_PULL_NO);
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_2, LL_GPIO_MODE_INPUT);
+
+    /*For enable/desible interrupt INT3 need use:                           */
+    /*INT3_Enable()       LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_2)             */
+    /*INT3_Disable()      LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_2)            */
+    /*Define in SetupPeriph.h                                               */
+
+    // EXTI interrupt init
+    NVIC_SetPriority(EXTI2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0)); //Set priority №2 from 0..15
+
+    NVIC_EnableIRQ(EXTI2_IRQn);
+    INT3_Enable();
+
+    /**********************************************/
+
+     /*Setup interrupt PULSE(PB9)*/
+    LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTB, LL_SYSCFG_EXTI_LINE9);
+
+    EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_9;
+    EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
+    EXTI_InitStruct.LineCommand = ENABLE;
+    EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+    EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
+    LL_EXTI_Init(&EXTI_InitStruct);
+
+    LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_9, LL_GPIO_PULL_NO);
+    LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_9, LL_GPIO_MODE_INPUT);
+
+    /*For enable/desible interrupt PULSE need use:                  */
+    /*INTERRUPT_PULSE_Enable()           LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_9)                 */
+    /*INTERRUPT_PULSE_Disable()          LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_9)                */
+    /*Define in SetupPeriph.h                          */
+
+    // EXTI interrupt init
+    NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),1, 0)); //Set priority №3 from 0..15
+
+    NVIC_EnableIRQ(EXTI9_5_IRQn);
+    INTERRUPT_PULSE_Disable();
+
+}
+
 
 
 /**

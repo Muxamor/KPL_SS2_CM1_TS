@@ -189,7 +189,29 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32l4xx.s).                    */
 /******************************************************************************/
 
-/* USER CODE BEGIN 1 */
+void EXTI2_IRQHandler(void){
 
-/* USER CODE END 1 */
+  //interrupt INT3 (PB2 ) RISING edge
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_2) != RESET){
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_2);
+
+    //TODO Write procesing flag.  
+
+
+  }
+}
+
+
+void EXTI9_5_IRQHandler(void){
+
+  //interrupt PULSE(PB9 ) FALLING edge
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_9) != RESET){
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_9);
+
+     //TODO Write procesing flag.  
+  }
+
+}
+
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

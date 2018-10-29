@@ -52,48 +52,68 @@ void MX_IWDG_Init(void);
 #endif
 
 
-/*For Enable/Disable global clock IO0(PC13) need use:                                   */
+/*For Enable/Disable global clock IO0(PC13) need use:             */
 #define Enable_IO0_global_clock()   LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13)
 #define Disable_IO0_global_clock()  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13)
 
-/*For change mode direction input/output ISA data port  D0..D15                         */
+/*For change mode direction input/output ISA data port  D0..D15   */
 #define Set_Output_mode_D0_D7()    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_OUTPUT)
 #define Set_Output_mode_D8_D15()   LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_OUTPUT)
 #define Set_Input_mode_D0_D7()     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_INPUT)
-#define Set_Iutput_mode_D8_D15()   LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_INPUT)
+#define Set_Input_mode_D8_D15()   LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_INPUT)
 
-/*For set/reset CLK300 need use  */
+/*For set/reset CLK300 need use                 */
 #define Set_CLK300()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_8)
 #define Reset_CLK300()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8)
 
-/*For set/reset CLK302_1 need use  */
-#define Set_CLK302_1()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10)
-#define Reset_CLK302_1()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10)
+/*For set/reset CLK302_1 need use               */
+#define Set_CLK302_1()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10)
+#define Reset_CLK302_1()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10)
 
-/*For set/reset CLK302_2 need use  */
-#define Set_CLK302_2()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11)
-#define Reset_CLK302_2()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11)
+#define Pulse_CLK302_1()      LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10);\
+                              __NOP();\
+                              __NOP();\
+                              LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);
 
-/*For set/reset CLK302_3 need use  */
-#define Set_CLK302_3()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12)
-#define Reset_CLK302_3()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12)
+/*For set/reset CLK302_2 need use               */
+#define Set_CLK302_2()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11)
+#define Reset_CLK302_2()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11)
 
-/*For set/reset CLK304 need use  */
-#define Set_CLK304()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9)
-#define Reset_CLK304()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9)
+/*For set/reset CLK302_3 need use               */
+#define Set_CLK302_3()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12)
+#define Reset_CLK302_3()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12)
 
-/*For set/reset EN304 need use  */
-#define Set_EN304()       LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_8)
-#define Reset_EN304()     LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_8)
+/*For set/reset CLK304 need use                 */
+#define Set_CLK304()          LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9)
+#define Reset_CLK304()        LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9)
 
-/*For set/reset RST304 need use  */
-#define Set_RST304()       LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1)
-#define Reset_RST304()     LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1)
+#define Pulse_CLK304();       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);\
+                              __NOP();\
+                              __NOP();\
+                              LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);
+                          
 
-/*For set/reset CLK306 need use  */
-#define Set_CLK306()       LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2)
-#define Reset_CLK306()     LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2)
+/*For set/reset EN304 need use                  */
+#define Set_EN304()           LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_8)
+#define Reset_EN304()         LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_8)
+
+/*For set/reset RST304 need use                 */
+#define Set_RST304()          LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1)
+#define Reset_RST304()        LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1)
+
+/*For set/reset CLK306 need use                 */
+#define Set_CLK306()          LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2)
+#define Reset_CLK306()        LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2)
+
+/*For enable/desible interrupt INT3 need use:   */
+#define INT3_Enable()         LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_2)             
+#define INT3_Disable()        LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_2)            
   
+/*For enable/desible interrupt PULSE need use:  */
+#define INTERRUPT_PULSE_Enable()           LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_9)                 
+#define INTERRUPT_PULSE_Disable()          LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_9)          
+
+
 
 #ifdef __cplusplus
  extern "C" {

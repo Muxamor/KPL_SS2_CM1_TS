@@ -29,7 +29,11 @@ int main(void){
 	I2C1_Init();
 
 
+
+
 	Default_Setup_CM();
+
+	//TODO write check is preset block 2
 
 	while(1){
 
