@@ -21,6 +21,19 @@
 
 int main(void){
 
+	_REG_302 reg_302 = {
+						.reg_304_ready_get_command     = 1, 
+ 						.harware_1bit_reg302		   = 0, 
+ 						.harware_2bit_reg302		   = 0, 
+ 						.block2_ready			       = 0,
+ 						.buffer_empty	     		   = 1,
+ 						.buffer_error				   = 0,
+ 						.harware_6bit_reg302		   = 0,
+ 						.harware_7bit_reg302		   = 0, 
+						};
+
+
+	 _REG_302 *REG302_ptr = &reg_302;
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
@@ -28,10 +41,8 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 
-
-
-
-	Default_Setup_CM();
+	
+	Default_Setup_CM(REG302_ptr);
 
 	//TODO write check is preset block 2
 

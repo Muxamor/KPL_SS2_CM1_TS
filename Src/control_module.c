@@ -11,7 +11,9 @@
 #include "stm32l4xx_ll_gpio.h"
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
+#include "uart_comm.h"
 #include "control_module.h"
+
 
 #include  <stdio.h>
 
@@ -22,7 +24,7 @@
   * @retval void
   */
 
-void Default_Setup_CM( void ){
+void Default_Setup_CM( _REG_302 *reg302_ptr ){
 
 	Disable_IO0_global_clock();
 
@@ -48,6 +50,7 @@ void Default_Setup_CM( void ){
 	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
 	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x26
 
+
 	//Default setup temperature senser TMP75
 	uint8_t add_TMP75 = 0x48;
 	for(/*empty*/; add_TMP75 < 0x4E; add_TMP75++){ // Setup all temperatura IC TMP75 Block 1
@@ -60,6 +63,25 @@ void Default_Setup_CM( void ){
 		//Write Thigh registr addr=0x03 Thigh=40 in 12bit resolution = 0x280
 		I2C_write_reg_16bit_TMP75(I2C1, add_TMP75, 0x03, (0x280 << 4) );
 	}
+	////////////////////////////////////////
+
+
+	//Check that  Block 2 is present
+	uint16_t mass[4] = {0x06,0x00,0x00,0x00};
+	uint32_t tmp = 0;
+
+	Data_transmite_UART_9B (mass, 4,  USART3);
+	tmp = Data_receive_UART_9B (4 , USART3);
+
+	if(tmp == 0xFFFFFFFF){
+		reg302_ptr->block2_ready = 0;
+	}else{
+		reg302_ptr->block2_ready = 1;
+	}
+	////////////////////////////////////////
+
+
+	Write_reg302_D0_D7 ( *(uint32_t *)reg302_ptr );
 
 }
 
