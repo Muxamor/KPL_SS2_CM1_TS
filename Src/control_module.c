@@ -12,7 +12,11 @@
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "uart_comm.h"
+#include "analog_mod_control.h"
 #include "control_module.h"
+
+
+#include "global_variables.h"
 
 
 #include  <stdio.h>
@@ -155,7 +159,7 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
 	uint32_t invert_data_D0_D7=0, data_D0_D7=0;
 
 	//Change diraction ISA bus
-	Reset_EN304();
+	//Reset_EN304();
 	Set_Output_mode_D0_D7(); 		
 	Set_Output_mode_D8_D15();
 
@@ -175,40 +179,80 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
   * @param  void
   * @retval void
   */
-void Get_Parse_ISA_command (void){
-/*
-	uint16_t data1_D0_D15 = 0, data2_D0_D15 = 0, data3_D0_D15 = 0;
-	uint8_t number_command =0;
+void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_mod_config[] ){
+
+	uint16_t word1_D0_D15 = 0, word2_D0_D15 = 0, word3_D0_D15 = 0;
+	uint8_t number_command = 0, i=0;
+	//ErrorStatus ret;
+	uint16_t mass[4];
+	uint32_t tmp=0;
+
 
 	// Read data D0..D15
-	data1_D0_D15 = (uint16_t) Read_data_D0_D15();
+	word1_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 	
 	// Parse and processing command  and prepare answer
-	number_command  =  (uint8_t)(data_D0_D15 >> 8);
+	number_command  =  (uint8_t)(word1_D0_D15 >> 8);
 
 
 	switch(number_command){
 
 		case 1:  //Switch ON power analog mod;
 			Write_reg304_D0_D15( 0x01);
-			Write_reg302_D0_D7 ( uint32_t data_reg302 )
-			while(INTERRUPT)
-			data2_D0_D15 = (uint16_t) Read_data_D0_D15();
-			Write_reg304_D0_D15( 0x01);
-			Write_reg302_D0_D7 ( uint32_t data_reg302 )
-			while(INTERRUPT)
-			data3_D0_D15 = (uint16_t) Read_data_D0_D15();
-			Write_reg304_D0_D15( 0x01);
-			Write_reg302_D0_D7 ( uint32_t data_reg302 )
+			reg302_ptr->reg_304_ready_get_command = 1;
+			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
 
+			while(FLAG_interrupt_INT3==0);// TODO protection infinity loop
+
+			FLAG_interrupt_INT3 = 0;
+			word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+			I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
+			I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
+			for(i=0; i<16; i++){
+			 	analog_mod_config[i].power_module_on = ( word2_D0_D15 >> i ) & 0x0001;
+			}
+			Write_reg304_D0_D15( 0x01); //??????????????????????? 
+			reg302_ptr->reg_304_ready_get_command = 1;
+			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+
+
+			while(FLAG_interrupt_INT3==0); // TODO protection infinity loop
+			FLAG_interrupt_INT3= 0;
+			word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+			mass[0] = 0x06;
+			mass[1] = 0x00;
+			mass[2] = (word3_D0_D15>>8) & 0x00FF;
+			mass[3] = word3_D0_D15 & 0x00FF;
+			Data_transmite_UART_9B ( mass , 4,  USART3);
+			tmp = Data_receive_UART_9B (4 , USART3);
+
+			if(tmp == 0xFFFFFFFF || tmp != 0x06010000){
+				reg302_ptr->block2_ready = 0;
+				for(i=16; i<32; i++){
+			 		analog_mod_config[i].power_module_on = 0x00;
+				}
+
+			}else{
+				reg302_ptr->block2_ready = 1;
+				for(i=16; i<32; i++){
+			 		analog_mod_config[i].power_module_on = ( word3_D0_D15 >> i ) & 0x0001;
+				}
+
+			}
+
+			if(reg302_ptr->block2_ready == 0){
+				Write_reg304_D0_D15( 0x02);
+			}else{
+				Write_reg304_D0_D15( 0x01);
+			}
+			reg302_ptr->reg_304_ready_get_command = 1;
+			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 		break;
 
 		default:
 		break;
-
 	}
-*/
 
 }
 

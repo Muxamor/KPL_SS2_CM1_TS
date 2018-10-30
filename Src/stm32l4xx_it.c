@@ -34,6 +34,8 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_it.h"
 
+#include "global_variables.h"
+
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -194,9 +196,7 @@ void EXTI2_IRQHandler(void){
   //interrupt INT3 (PB2 ) RISING edge
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_2) != RESET){
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_2);
-
-    //TODO Write procesing flag.  
-
+    FLAG_interrupt_INT3 = 1;
 
   }
 }
@@ -208,8 +208,19 @@ void EXTI9_5_IRQHandler(void){
   if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_9) != RESET){
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_9);
 
-     //TODO Write procesing flag.  
+      FLAG_interrupt_PULSE = 1; 
+
+      if( loop_counter == 255 ){
+        loop_counter = 0;
+      }else{
+        loop_counter++; 
+      } 
+
+      if(counter_ADC_data_ready < 76){ // = 76 ADC data ready 
+        counter_ADC_data_ready++;
+      }
   }
+
 
 }
 

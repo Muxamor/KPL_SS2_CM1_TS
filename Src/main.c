@@ -18,8 +18,17 @@
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release
 
+uint8_t FLAG_interrupt_INT3; // 1 = Command is come 
+uint8_t FLAG_interrupt_PULSE; // 1 = Pulse (global clock) is come
+uint8_t loop_counter; // counter of package 
+uint8_t counter_ADC_data_ready; // counter of package 
 
 int main(void){
+
+	FLAG_interrupt_INT3 = 0;
+	FLAG_interrupt_PULSE = 0;
+	loop_counter = 0;
+	counter_ADC_data_ready =0;
 
 	_REG_302 reg_302 = {
 						.reg_304_ready_get_command     = 1, 
@@ -32,20 +41,27 @@ int main(void){
  						.harware_7bit_reg302		   = 0, 
 						};
 
-
 	 _REG_302 *REG302_ptr = &reg_302;
 
-	 
+	 _ANALOG_MODULE_CONFIG analog_mod_config[32] = {0};
+
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
+	SetupInterrupt();
 	
 	Default_Setup_CM(REG302_ptr);
 
 	while(1){
+
+		if( FLAG_interrupt_INT3 == 1 ){
+			Get_Parse_ISA_command (REG302_ptr, analog_mod_config );
+		}
+
+
 
 	}
 
