@@ -155,7 +155,7 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
   * @retval void
   */
 void Get_Parse_ISA_command (void){
-
+/*
 	uint16_t data1_D0_D15 = 0, data2_D0_D15 = 0, data3_D0_D15 = 0;
 	uint8_t number_command =0;
 
@@ -185,17 +185,9 @@ void Get_Parse_ISA_command (void){
 
 		default:
 		break;
+
 	}
-
-
-
-
-
-
-
-
-
-
+*/
 
 }
 
