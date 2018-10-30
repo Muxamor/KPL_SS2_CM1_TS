@@ -40,8 +40,6 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	Set_RST304();
 	Reset_CLK306();
 
-	//TODO Write default state to REG302
-
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
 	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
@@ -49,7 +47,7 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	//Address IC TCA9554 = 0x26
 	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
 	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x26
-
+	////////////////////////////////////////
 
 	//Default setup temperature senser TMP75
 	uint8_t add_TMP75 = 0x48;
@@ -81,6 +79,7 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	////////////////////////////////////////
 
 
+	//Write default statu reg302
 	Write_reg302_D0_D7 ( *(uint32_t *)reg302_ptr );
 
 }

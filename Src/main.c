@@ -34,17 +34,16 @@ int main(void){
 
 
 	 _REG_302 *REG302_ptr = &reg_302;
+
+	 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
-
 	
 	Default_Setup_CM(REG302_ptr);
-
-	//TODO write check is preset block 2
 
 	while(1){
 
