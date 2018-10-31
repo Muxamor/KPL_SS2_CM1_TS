@@ -7,18 +7,15 @@
  extern "C" {
 #endif
 
+ #include "control_module.h"
+
  extern void _Error_Handler(char *, int);
 
- typedef struct{
 
- 	uint8_t power_module_on; // =1 analog module is on, =0 analog module is off
- 	uint8_t amp_factor_K1;
- 	uint8_t amp_factor_K2;
- 	uint8_t Fcut_value; 
- 	uint8_t Status_module; 
- 	  
 
- }_ANALOG_MODULE_CONFIG; 
+ ErrorStatus ISA_Command_100 ( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
+ ErrorStatus ISA_Command_200 ( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
+ ErrorStatus ISA_Command_400 ( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
 
 
 

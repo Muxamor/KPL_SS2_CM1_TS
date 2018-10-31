@@ -179,15 +179,11 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
   * @param  void
   * @retval void
   */
-void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_mod_config[] ){
+void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
 
-	uint16_t word1_D0_D15 = 0, word2_D0_D15 = 0, word3_D0_D15 = 0;
-	uint8_t number_command = 0, i=0;
-	ErrorStatus ret1, ret2;
-	uint16_t mass[4];
-	uint32_t tmp=0;
-	uint32_t counter=0;
-
+	uint16_t word1_D0_D15 = 0;
+	uint8_t number_command = 0;
+	
 
 	// Read data D0..D15
 	word1_D0_D15 = (uint16_t) Read_reg304_D0_D15();
@@ -199,79 +195,22 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_
 	switch(number_command){
 
 		case 1:  //Switch ON power analog mod;
-			Write_reg304_D0_D15( 0x01);
-			reg302_ptr->reg_304_ready_get_command = 1;
-			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+			ISA_Command_100(reg302_ptr, analog_mod_config);
+			break;	
 
-			counter=0;
-			while( FLAG_interrupt_INT3==0 ){
-				counter++;
-				if(counter==10000000){
-					Error_Handler();
-					//goto exit_error;
-				}
-			}
+		case 2:
+			ISA_Command_200(reg302_ptr, analog_mod_config);
+			break;
 
-			FLAG_interrupt_INT3 = 0;
-			word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
-			ret1 = I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
-			ret2 = I2C_write_reg_TCA9554(I2C1, 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
-			if(ret1==ERROR || ret2==ERROR){
-				for(i=0; i<16; i++){
-				 	analog_mod_config[i].power_module_on = 0x00;
-				 	Error_Handler();
-				 	Write_reg304_D0_D15( 0x02);
-				}
-			}else{
-				for(i=0; i<16; i++){
-					analog_mod_config[i].power_module_on = ( word2_D0_D15 >> i ) & 0x0001;
-				}
-				Write_reg304_D0_D15( 0x01); //???????????????????????
-			}
-			reg302_ptr->reg_304_ready_get_command = 1;
-			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+		case 3:
+			ISA_Command_400 (word1_D0_D15 , reg302_ptr, analog_mod_config);
+
+			break;
 
 
-			counter=0;
-			while( FLAG_interrupt_INT3==0 ){
-				counter++;
-				if(counter==10000000){
-					Error_Handler();
-					//goto exit_error;
-				}
-			}
 
-			FLAG_interrupt_INT3= 0;
-			word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
-			mass[0] = 0x06;
-			mass[1] = 0x00;
-			mass[2] = (word3_D0_D15>>8) & 0x00FF;
-			mass[3] = word3_D0_D15 & 0x00FF;
-			Data_transmite_UART_9B ( mass , 4,  USART3);
-			tmp = Data_receive_UART_9B (4 , USART3);
 
-			if(tmp == 0xFFFFFFFF || tmp != 0x06010000){
-				reg302_ptr->block2_ready = 0;
-				for(i=16; i<32; i++){
-			 		analog_mod_config[i].power_module_on = 0x00;
-				}
 
-			}else{
-				reg302_ptr->block2_ready = 1;
-				for(i=16; i<32; i++){
-			 		analog_mod_config[i].power_module_on = ( word3_D0_D15 >> i ) & 0x0001;
-				}
-
-			}
-
-			if(reg302_ptr->block2_ready == 0){
-				Write_reg304_D0_D15( 0x02);
-			}else{
-				Write_reg304_D0_D15( 0x01);
-			}
-			reg302_ptr->reg_304_ready_get_command = 1;
-			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
-		break;
 
 		default:
 		break;

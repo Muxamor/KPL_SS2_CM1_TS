@@ -6,6 +6,8 @@
  extern "C" {
 #endif
 
+ 
+
  extern void _Error_Handler(char *, int);
 
  typedef struct{
@@ -31,13 +33,23 @@
 
  }_REG_302; 
 
+ typedef struct{
+
+ 	uint8_t power_module_on; // =1 analog module is on, =0 analog module is off
+ 	uint8_t amp_factor_K1;
+ 	uint8_t amp_factor_K2;
+ 	uint8_t Fcut_value; 
+ 	uint8_t Status_module; 
+ 	  
+
+ }_ANALOG_MODULE_CONF; 
 
 
  void Default_Setup_CM( _REG_302 *reg302_ptr );
  uint32_t Read_reg304_D0_D15( void );
  void Write_reg304_D0_D15( uint32_t data_D0_D15 );
  void Write_reg302_D0_D7 ( uint32_t data_D0_D7 );
- void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_mod_config[] );
+ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
 
 
 

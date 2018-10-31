@@ -43,7 +43,7 @@ int main(void){
 
 	 _REG_302 *REG302_ptr = &reg_302;
 
-	 _ANALOG_MODULE_CONFIG analog_mod_config[32] = {0};
+	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz

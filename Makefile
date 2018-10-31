@@ -46,8 +46,8 @@ Src/system_stm32l4xx.c \
 Src/SetupPeriph.c \
 Src/i2c_cm.c \
 Src/uart_comm.c \
-Src/analog_mod_control.c \
-Src/control_module.c
+Src/control_module.c\
+Src/analog_mod_control.c
 
 
 
