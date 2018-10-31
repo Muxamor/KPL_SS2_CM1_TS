@@ -210,7 +210,7 @@ void EXTI9_5_IRQHandler(void){
 
       FLAG_interrupt_PULSE = 1; 
 
-      if( loop_counter == 255 ){
+      if( loop_counter == 254 ){
         loop_counter = 0;
       }else{
         loop_counter++; 

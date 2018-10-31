@@ -159,7 +159,7 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
 	uint32_t invert_data_D0_D7=0, data_D0_D7=0;
 
 	//Change diraction ISA bus
-	//Reset_EN304();
+	Reset_EN304();
 	Set_Output_mode_D0_D7(); 		
 	Set_Output_mode_D8_D15();
 
@@ -183,9 +183,10 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_
 
 	uint16_t word1_D0_D15 = 0, word2_D0_D15 = 0, word3_D0_D15 = 0;
 	uint8_t number_command = 0, i=0;
-	//ErrorStatus ret;
+	ErrorStatus ret1, ret2;
 	uint16_t mass[4];
 	uint32_t tmp=0;
+	uint32_t counter=0;
 
 
 	// Read data D0..D15
@@ -202,22 +203,44 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONFIG  analog_
 			reg302_ptr->reg_304_ready_get_command = 1;
 			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
-
-			while(FLAG_interrupt_INT3==0);// TODO protection infinity loop
+			counter=0;
+			while( FLAG_interrupt_INT3==0 ){
+				counter++;
+				if(counter==10000000){
+					Error_Handler();
+					//goto exit_error;
+				}
+			}
 
 			FLAG_interrupt_INT3 = 0;
 			word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
-			I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
-			I2C_write_reg_TCA9554(I2C1 , 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
-			for(i=0; i<16; i++){
-			 	analog_mod_config[i].power_module_on = ( word2_D0_D15 >> i ) & 0x0001;
+			ret1 = I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
+			ret2 = I2C_write_reg_TCA9554(I2C1, 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
+			if(ret1==ERROR || ret2==ERROR){
+				for(i=0; i<16; i++){
+				 	analog_mod_config[i].power_module_on = 0x00;
+				 	Error_Handler();
+				 	Write_reg304_D0_D15( 0x02);
+				}
+			}else{
+				for(i=0; i<16; i++){
+					analog_mod_config[i].power_module_on = ( word2_D0_D15 >> i ) & 0x0001;
+				}
+				Write_reg304_D0_D15( 0x01); //???????????????????????
 			}
-			Write_reg304_D0_D15( 0x01); //??????????????????????? 
 			reg302_ptr->reg_304_ready_get_command = 1;
 			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
 
-			while(FLAG_interrupt_INT3==0); // TODO protection infinity loop
+			counter=0;
+			while( FLAG_interrupt_INT3==0 ){
+				counter++;
+				if(counter==10000000){
+					Error_Handler();
+					//goto exit_error;
+				}
+			}
+
 			FLAG_interrupt_INT3= 0;
 			word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 			mass[0] = 0x06;
