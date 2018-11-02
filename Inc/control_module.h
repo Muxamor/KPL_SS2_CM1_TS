@@ -40,7 +40,6 @@
  	uint8_t amp_factor_K2;
  	uint8_t Fcut_value; 
  	uint8_t Status_module; 
- 	  
 
  }_ANALOG_MODULE_CONF; 
 

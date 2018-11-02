@@ -12,7 +12,10 @@
 /****************************TODO*************************
 1. Check first front signal I2C on the board. Speed = 400kHz 
 
-
+						Attention !!!!!!
+The structure of the software is not optimal because it was originally
+issued an incorrect description of the work of the exchange protocol.
+ !!!!If there is time to redo the structure!!!!!!!
 **********************************************************/
 //LL_mDelay(1);
 //LL_RCC_ClocksTypeDef check_RCC_Clocks,  *CHECK_RCC_CLOCKS=&check_RCC_Clocks; // Only for check setup clock. Not need use in release

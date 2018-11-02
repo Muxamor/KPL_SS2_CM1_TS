@@ -145,7 +145,7 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
 	invert_data_D8_D15 = ( ~ data_D8_D15 ) & 0x000000FF;
 	WRITE_REG(GPIOC->BSRR,  ( ( invert_data_D8_D15 << 16 ) | data_D8_D15) ); //Set bits. Maybe use BRR register to reset bits 
 
-	 Pulse_CLK304();
+	Pulse_CLK304();
 }
 
 /**

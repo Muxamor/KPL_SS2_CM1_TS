@@ -30,13 +30,13 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	counter=0;
 	while( FLAG_interrupt_INT3==0 ){
 		counter++;
-		if(counter==10000000){
+		if(counter==1000000){
 			Error_Handler();
 			goto exit_error;
 		}
 	}
-
 	FLAG_interrupt_INT3 = 0;
+
 	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 	ret1 = I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
 	ret2 = I2C_write_reg_TCA9554(I2C1, 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
@@ -47,16 +47,16 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 			analog_mod_config[i].power_module_on = 0x00;
 		}
 		Error_Handler();
-		Write_reg304_D0_D15( 0x02);
-		
+
 	}else{
 		
 		for(i=0; i<16; i++){
-			analog_mod_config[i].power_module_on = ( word2_D0_D15 >> i ) & 0x0001;
+			analog_mod_config[i].power_module_on = (uint8_t)(( word2_D0_D15 >> i ) & 0x0001);
 		}
-		Write_reg304_D0_D15( 0x01); 
+
 	}
-			
+
+	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
 	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
@@ -73,8 +73,8 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	FLAG_interrupt_INT3= 0;
 	word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 
-	mass[0] = 0x06;
-	mass[1] = 0x00;
+	mass[0] = 0x0006;
+	mass[1] = 0x0000;
 	mass[2] = (word3_D0_D15>>8) & 0x00FF;
 	mass[3] = word3_D0_D15 & 0x00FF;
 	Data_transmite_UART_9B ( mass , 4,  USART3);
@@ -89,11 +89,11 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}else{
 		reg302_ptr->block2_ready = 1;
 		for(i=16; i<32; i++){
-			 analog_mod_config[i].power_module_on = ( word3_D0_D15 >> i ) & 0x0001;
+			 analog_mod_config[i].power_module_on = (uint8_t)(( word3_D0_D15 >> i ) & 0x0001);
 		}
 	}
 
-	if(reg302_ptr->block2_ready == 0){
+	if(reg302_ptr->block2_ready == 0 || ret1==ERROR || ret2==ERROR ){
 		Write_reg304_D0_D15( 0x02);
 	}else{
 		Write_reg304_D0_D15( 0x01);
@@ -119,11 +119,11 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, 0xFF); // ON/OFF analog module in block1, Address IC = 0x20
 	I2C_write_reg_TCA9554(I2C1, 0x26, 0x01,  0xFF); // ON/OFF analog module in block1, Address IC = 0x26
 
-	mass[0] = 0x06;
-	mass[1] = 0x00;
-	mass[2] = 0x00;
-	mass[3] = 0x00;
-	Data_transmite_UART_9B ( mass , 4,  USART3);
+	mass[0] = 0x0006;
+	mass[1] = 0x0000;
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
+	Data_transmite_UART_9B (mass , 4,  USART3);
 	tmp = Data_receive_UART_9B (4 , USART3);
 
 	if(tmp == 0xFFFFFFFF || tmp != 0x06010000){
@@ -134,10 +134,10 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		analog_mod_config[i].power_module_on = 0x00;
 	}
 
-	Write_reg304_D0_D15( 0x01);
+	Write_reg304_D0_D15(0x01);
 
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
 
 	return SUCCESS; 
 }
@@ -152,21 +152,21 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 	USART_TypeDef *USARTx;
 	
-	addr_analog_mod = word1_D0_D15  >> 3;
+	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod < 16){
+	if(addr_analog_mod <= 15){
 		USARTx = USART1;
 
 	}else{
 		USARTx = USART3;
 	}
 
-	mass[0] = (word1_D0_D15 & 0xF8)| 0x02; // Set K1 command 
-	mass[1] = word1_D0_D15 & 0x03;
-	mass[2] = 0x00;
-	mass[3] = 0x00;
+	mass[0] = (word1_D0_D15 & 0x00F8)| 0x0002; // Set K1 command
+	mass[1] = word1_D0_D15 & 0x0003;
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
 
-	Data_transmite_UART_9B ( mass , 4,  USARTx);
+	Data_transmite_UART_9B (mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B (4 , USARTx);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
@@ -176,14 +176,16 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 		analog_mod_config[addr_analog_mod].amp_factor_K1 = 0x00;
 		Write_reg304_D0_D15(0x02);
+
 	}else{
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 1;
 		}
 
-		analog_mod_config[addr_analog_mod].amp_factor_K1 = word1_D0_D15 & 0x03;
+		analog_mod_config[addr_analog_mod].amp_factor_K1 = (uint8_t)(word1_D0_D15 & 0x0003);
 		Write_reg304_D0_D15(0x01);
 	}
+
 
 	reg302_ptr->reg_304_ready_get_command = 1;
 	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
@@ -203,8 +205,6 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 	USART_TypeDef *USARTx;
 	
-	
-
 	//Answer at the 1 word command 500
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
@@ -214,28 +214,27 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	counter=0;
 	while( FLAG_interrupt_INT3==0 ){
 		counter++;
-		if(counter==10000000){
+		if(counter==1000000){
 			Error_Handler();
 			goto exit_error;
 		}
 	}
-
 	FLAG_interrupt_INT3 = 0;
+
 	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 
-	
-	addr_analog_mod = word1_D0_D15 >> 3;
+	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod < 16){
+	if(addr_analog_mod <= 15){
 		USARTx = USART1;
 
 	}else{
 		USARTx = USART3;
 	}
 
-	mass[0] = ((word1_D0_D15 & 0xF8)| 0x03) &0X00FF; // Set K2 command 
+	mass[0] = (word1_D0_D15 & 0x00F8)| 0x03; // Set K2 command
 
-	switch (word2_D0_D15 & 0XFFF){
+	switch (word2_D0_D15 & 0x0FFF){
 		case 0xFFF:
 			mass[1] = 0x00;
 			break;
@@ -289,27 +288,28 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 			break;
 	}
 
-	mass[2] = 0x00;
-	mass[3] = 0x00;
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
 
-	Data_transmite_UART_9B ( mass , 4,  USARTx);
+	Data_transmite_UART_9B (mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B (4 , USARTx);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 0;
 		}
-
 		analog_mod_config[addr_analog_mod].amp_factor_K2 = 0x00;
 		Write_reg304_D0_D15(0x02);
+
 	}else{
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 1;
 		}
 
-		analog_mod_config[addr_analog_mod].amp_factor_K2 = word2_D0_D15 & 0X0FFF;
+		analog_mod_config[addr_analog_mod].amp_factor_K2 =(uint8_t)mass[1];
 		Write_reg304_D0_D15(0x01);
 	}
+
 
 	reg302_ptr->reg_304_ready_get_command = 1;
 	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
@@ -347,21 +347,19 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 			goto exit_error;
 		}
 	}
-
 	FLAG_interrupt_INT3 = 0;
-	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 
-	
+	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 	addr_analog_mod =  ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod < 16){
+	if(addr_analog_mod <= 15){
 		USARTx = USART1;
 
 	}else{
 		USARTx = USART3;
 	}
 
-	mass[0] = ((word1_D0_D15 & 0xF8)| 0x04) & 0x00FF; // Set Fcut command 
+	mass[0] = (word1_D0_D15 & 0x00F8)| 0x04; // Set Fcut command
 	mass[1] = word2_D0_D15 & 0x00FF;
 	mass[2] = 0x00;
 	mass[3] = 0x00;
@@ -373,9 +371,9 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 0;
 		}
-
 		analog_mod_config[addr_analog_mod].Fcut_value = 0x01;
 		Write_reg304_D0_D15(0x02);
+
 	}else{
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 1;
