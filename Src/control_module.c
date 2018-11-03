@@ -215,14 +215,15 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 			break;
 
 		case 7:
-		//TODO
+			ISA_Command_700(word1_D0_D15 , reg302_ptr, analog_mod_config);
 			break;
 
 		case 8:
-		//TODO
+			ISA_Command_800(reg302_ptr, analog_mod_config);
 			break;
 
 		case 9: 
+
 			break;
 
 

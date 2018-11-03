@@ -394,7 +394,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 }
 
-/*
+
 ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
 
 	uint8_t addr_analog_mod=0;
@@ -478,45 +478,62 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 				break;
 
 			case 0x05: // Request state byte
-				answer_ISA_D15_D0 = ( (uint16_t)(tmp>>16) ) & 0xFF;
+				answer_ISA_D15_D0 = ( (uint16_t)(tmp>>16) ) & 0xFF00;
 				break;
 
-
-				 
+			case 0x04:
+			case 0x06:
+			case 0x07:
+				answer_ISA_D15_D0 = 0x0001;
 				break;
 
 			default:
-				 
+				answer_ISA_D15_D0 = 0x0001;
 				break;
 		}
 
-
-
-
-
-
-
-		
 		Write_reg304_D0_D15(answer_ISA_D15_D0);
 	}
 
 	reg302_ptr->reg_304_ready_get_command = 1;
 	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
-
-
-
-
-	
-
-
 	return SUCCESS; 
 
-	exit_error: 
-		return ERROR; 
-
 }
-*/
+
+
+ErrorStatus ISA_Command_800( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+	
+	I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, 0xFF); // ON/OFF analog module in block1, Address IC = 0x20
+	I2C_write_reg_TCA9554(I2C1, 0x26, 0x01,  0xFF); // ON/OFF analog module in block1, Address IC = 0x26
+	
+	/* Need command to send reset command to CM vodule in block 2
+	mass[0] = 0x0006;
+	mass[1] = 0x0000;
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
+	Data_transmite_UART_9B (mass , 4,  USART3);
+	tmp = Data_receive_UART_9B (4 , USART3);
+
+	if(tmp == 0xFFFFFFFF || tmp != 0x06010000){
+		reg302_ptr->block2_ready = 0;
+	}
+	
+
+	for(i=0; i<32; i++){
+		analog_mod_config[i].power_module_on = 0x00;
+	}*/
+
+	Write_reg304_D0_D15(0x01);
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
+
+	while(1); // Wait watch dog
+
+	return SUCCESS; 
+}
+
 
 
 
