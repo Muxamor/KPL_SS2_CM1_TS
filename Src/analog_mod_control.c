@@ -46,17 +46,18 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		for(i=0; i<16; i++){
 			analog_mod_config[i].power_module_on = 0x00;
 		}
-		Error_Handler();
+		//Error_Handler();
+		Write_reg304_D0_D15( 0x02);
 
 	}else{
 		
 		for(i=0; i<16; i++){
 			analog_mod_config[i].power_module_on = (uint8_t)(( word2_D0_D15 >> i ) & 0x0001);
 		}
+		Write_reg304_D0_D15( 0x01);
 
 	}
 
-	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
 	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
@@ -70,7 +71,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		}
 	}
 
-	FLAG_interrupt_INT3= 0;
+	FLAG_interrupt_INT3 = 0;
 	word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 
 	mass[0] = 0x0006;
@@ -93,7 +94,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		}
 	}
 
-	if(reg302_ptr->block2_ready == 0 || ret1==ERROR || ret2==ERROR ){
+	if( reg302_ptr->block2_ready == 0 ){
 		Write_reg304_D0_D15( 0x02);
 	}else{
 		Write_reg304_D0_D15( 0x01);
@@ -393,8 +394,129 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 }
 
+/*
+ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+
+	uint8_t addr_analog_mod=0;
+	uint8_t number_request=0;
+
+	uint16_t mass[4];
+	uint16_t table_amp_factorK2[12] = {0xFFF, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004, 0x002, 0x001 }; 
+
+	uint16_t answer_ISA_D15_D0=0X0000;
+	uint32_t tmp=0;
+
+	USART_TypeDef *USARTx;
+	
+	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
+	number_request = ((uint8_t)word1_D0_D15) & 0x07;
 
 
+	if(addr_analog_mod <= 15){
+		USARTx = USART1;
+
+	}else{
+		USARTx = USART3;
+	}
+
+
+	switch(number_request ){
+
+		case 0x01: //Request amplifier factor K1
+			mass[0] = (word1_D0_D15 & 0x00F8)| 0x02; 	
+			break;
+
+		case 0x02: //Request amplifier factor K2
+			mass[0] = (word1_D0_D15 & 0x00F8)| 0x03; 	
+			break;
+
+		case 0x03: //Request Fcut
+			mass[0] = (word1_D0_D15 & 0x00F8)| 0x04; 
+			break;
+
+		case 0x05: // Request state byte
+			mass[0] = (word1_D0_D15 & 0x00F8)| 0x05; 
+			break;
+
+		default:
+			mass[0] = (word1_D0_D15 & 0x00F8)| 0x05; 
+			break;
+	}
+
+	mass[1] = 0x0080;	
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
+
+	Data_transmite_UART_9B(mass , 4,  USARTx);
+	tmp = Data_receive_UART_9B(4 , USARTx);
+
+	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
+		if( USARTx == USART3 ){
+			reg302_ptr->block2_ready = 0;
+		}
+		Write_reg304_D0_D15(0x02);
+
+	}else{
+		if( USARTx == USART3 ){
+			reg302_ptr->block2_ready = 1;
+		}
+
+    	switch(number_request ){
+
+			case 0x01: //Request amplifier factor K1 
+				answer_ISA_D15_D0 = (( (uint16_t)(tmp>>8) ) & 0x0300) | 0x0001;
+				break;
+
+			case 0x02: //Request amplifier factor K2
+
+				answer_ISA_D15_D0 = table_amp_factorK2[ ((uint8_t)(tmp>>16)) ];
+				answer_ISA_D15_D0 = (answer_ISA_D15_D0<<4)| 0x0001;				 	
+				break;
+
+			case 0x03: //Request Fcut
+				answer_ISA_D15_D0 = (( (uint16_t)(tmp>>8) ) & 0xFF00) | 0x0001;
+				break;
+
+			case 0x05: // Request state byte
+				answer_ISA_D15_D0 = ( (uint16_t)(tmp>>16) ) & 0xFF;
+				break;
+
+
+				 
+				break;
+
+			default:
+				 
+				break;
+		}
+
+
+
+
+
+
+
+		
+		Write_reg304_D0_D15(answer_ISA_D15_D0);
+	}
+
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+
+
+
+
+
+	
+
+
+	return SUCCESS; 
+
+	exit_error: 
+		return ERROR; 
+
+}
+*/
 
 
 
