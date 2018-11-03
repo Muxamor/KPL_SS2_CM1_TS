@@ -2,6 +2,7 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_exti.h"
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "uart_comm.h"
@@ -99,14 +100,11 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}else{
 		Write_reg304_D0_D15( 0x01);
 	}
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
 	return SUCCESS; 
 
 	exit_error:
 		return ERROR;
-
 }
 
 
@@ -136,9 +134,6 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}
 
 	Write_reg304_D0_D15(0x01);
-
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
 
 	return SUCCESS; 
 }
@@ -186,10 +181,6 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		analog_mod_config[addr_analog_mod].amp_factor_K1 = (uint8_t)(word1_D0_D15 & 0x0003);
 		Write_reg304_D0_D15(0x01);
 	}
-
-
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
 
 	return SUCCESS; 
 }
@@ -311,15 +302,10 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		Write_reg304_D0_D15(0x01);
 	}
 
-
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
-
 	return SUCCESS; 
 
 	exit_error:
 		return ERROR; 
-
 }
 
 
@@ -384,14 +370,10 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		Write_reg304_D0_D15(0x01);
 	}
 
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
-
 	return SUCCESS; 
 
 	exit_error:
 		return ERROR; 
-
 }
 
 
@@ -495,9 +477,6 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		Write_reg304_D0_D15(answer_ISA_D15_D0);
 	}
 
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
-
 	return SUCCESS; 
 
 }
@@ -526,14 +505,106 @@ ErrorStatus ISA_Command_800( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}*/
 
 	Write_reg304_D0_D15(0x01);
-	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
 
 	while(1); // Wait watch dog
 
 	return SUCCESS; 
 }
 
+ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _STATUS_CONTROL_MODULE *status_control_mod ){
+
+	uint8_t state_control_module = 0;
+	uint16_t mass[4];
+
+	state_control_module = (uint8_t)word1_D0_D15;
+
+	mass[0] = 0x0000;
+	mass[2] = 0x0000;
+	mass[3] = 0x0000;
+
+	if(state_control_module == 0x01){//Start mode
+
+		mass[1] = 0x00FF;
+		status_control_mod-> cm_state_start_stop = 1; //Set Start state
+		counter_ADC_data_ready = 0;
+		loop_counter = 0;
+		INTERRUPT_PULSE_Enable();
+
+	}else{ // Stop mode
+
+		mass[1] = 0x0000;
+		status_control_mod-> cm_state_start_stop = 0; //Set Stop state
+		INTERRUPT_PULSE_Disable();
+	}
+
+	Data_transmite_UART_9B (mass , 4,  USART1);
+	Data_transmite_UART_9B (mass , 4,  USART3);
+
+	Write_reg304_D0_D15(0x01);
+
+	return SUCCESS; 
+}
+
+
+ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+
+	uint8_t addr_watch_registr = 0;
+	uint8_t value_watch_registr = 0;
+	uint16_t word2_D0_D15 = 0;
+	uint32_t counter = 0;
+	ErrorStatus ret;
+
+	addr_watch_registr = (uint8_t)word1_D0_D15;
+
+	//Answer at the 1 word command A00
+	Write_reg304_D0_D15( 0x01);
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+
+	//Get and processing second word
+	while( FLAG_interrupt_INT3==0 ){
+		counter++;
+		if(counter==1000000){
+			Error_Handler();
+			goto exit_error;
+		}
+	}
+	FLAG_interrupt_INT3 = 0;
+
+	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+
+	value_watch_registr = (uint8_t)(word2_D0_D15 & 0x00FF); 
+
+	ret = I2C_write_reg_DS3232(I2C1 , 0x68, addr_watch_registr, value_watch_registr); 
+
+	if(ret == ERROR){
+
+		Write_reg304_D0_D15( 0x02);
+	}else{
+
+		Write_reg304_D0_D15( 0x01);
+	}
+
+	return SUCCESS; 
+
+	exit_error:
+		return ERROR; 
+
+}
+
+ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+
+	uint8_t addr_read_watch_registr = 0;
+	uint8_t value_read_watch_registr = 0;
+
+	addr_read_watch_registr = (uint8_t)word1_D0_D15;
+
+	value_read_watch_registr = I2C_read_reg_DS3232(I2C1 , 0x68, addr_read_watch_registr);
+
+	Write_reg304_D0_D15( (uint16_t)value_read_watch_registr );
+
+	return SUCCESS; 
+}
 
 
 

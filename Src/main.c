@@ -27,11 +27,6 @@ uint8_t counter_ADC_data_ready; // counter of package
 
 int main(void){
 
-	FLAG_interrupt_INT3 = 0;
-	FLAG_interrupt_PULSE = 0;
-	loop_counter = 0;
-	counter_ADC_data_ready =0;
-
 	_REG_302 reg_302 = {
 						.reg_304_ready_get_command     = 1, 
  						.harware_1bit_reg302		   = 0, 
@@ -45,23 +40,37 @@ int main(void){
 
 	 _REG_302 *REG302_ptr = &reg_302;
 
+	 _STATUS_CONTROL_MODULE stat_contr_mod = {
+	 										   . cm_state_start_stop = 0,
+ 											   . first_adc_package = 1,
+											 };
+
+	 _STATUS_CONTROL_MODULE *STATUS_CONT_MOD_ptr = &stat_contr_mod;
+
+
 	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
-	//USART1_Init();
-	//USART3_Init();
-	//I2C1_Init();
+	USART1_Init();
+	USART3_Init();
+	I2C1_Init();
 	SetupInterrupt();
-	
-	//Default_Setup_CM(REG302_ptr);
+
+	Default_Setup_CM(REG302_ptr);
+
+	//Reset Interrupt and caunters;
+	FLAG_interrupt_INT3 = 0;
+	FLAG_interrupt_PULSE = 0;
+	loop_counter = 0;
+	counter_ADC_data_ready =0;
 
 	while(1){
 
 		if( FLAG_interrupt_INT3 == 1 ){
 			FLAG_interrupt_INT3 = 0;
-			Get_Parse_ISA_command (REG302_ptr, analog_mod_config );
+			Get_Parse_ISA_command (REG302_ptr, analog_mod_config, STATUS_CONT_MOD_ptr);
 		}
 
 

@@ -33,8 +33,7 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 
 	Disable_IO0_global_clock();
 
-	Set_Output_mode_D0_D7(); 		
-	Set_Output_mode_D8_D15();   
+	Set_Output_mode_D0_D15();
 
 	Reset_CLK300();
 	Reset_CLK302_1();		
@@ -100,13 +99,10 @@ uint32_t Read_reg304_D0_D15( void ){
 	uint32_t data_D0_D15=0;
 
 	//Change diraction ISA bus
-	Set_Input_mode_D0_D7();
-	Set_Input_mode_D8_D15();
+	Set_Input_mode_D0_D15();
+	__NOP();
+
 	Reset_EN304();
-	__NOP();
-	__NOP();
-	__NOP();
-	LL_mDelay(10);
 
 	///data_D0_D7 = LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
 	data_D0_D7 = LL_GPIO_ReadInputPort(GPIOA);
@@ -114,11 +110,6 @@ uint32_t Read_reg304_D0_D15( void ){
 //	data_D8_D15 = LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
 
 	data_D8_D15 = LL_GPIO_ReadInputPort(GPIOC) & 0x000000FF;
-
-
-	//Reset_EN304();
-	//Set_Output_mode_D0_D7(); 		
-	//Set_Output_mode_D8_D15();
 
 	data_D0_D15 = ( data_D8_D15 << 8 ) | data_D0_D7;
 
@@ -140,8 +131,9 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
 
 	//Change diraction ISA bus
 	Set_EN304();
-	Set_Output_mode_D0_D7(); 		
-	Set_Output_mode_D8_D15();
+
+	Set_Output_mode_D0_D15();
+	__NOP();
 
 	//write bite to PA0..PA7 
 	data_D0_D7 = data_D0_D15 & 0x000000FF;
@@ -168,8 +160,9 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
 
 	//Change diraction ISA bus
 	Reset_EN304();
-	Set_Output_mode_D0_D7(); 		
-	Set_Output_mode_D8_D15();
+
+	Set_Output_mode_D0_D15();
+	__NOP();
 
 	//write bite to PA0..PA7 
 	data_D0_D7 = data_reg302 & 0x000000FF;
@@ -187,7 +180,7 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
   * @param  void
   * @retval void
   */
-void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[], _STATUS_CONTROL_MODULE *stat_cont_mod ){
 
 	uint16_t word1_D0_D15 = 0;
 	uint8_t number_command = 0;
@@ -199,48 +192,61 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 	// Parse and processing command  and prepare answer
 	number_command  =  (uint8_t)(word1_D0_D15 >> 8);
 
+	if( stat_cont_mod->cm_state_start_stop == 1 && number_command == 9 ){ // Start mode
 
-	switch(number_command){
+		 ISA_Command_900( word1_D0_D15, reg302_ptr, stat_cont_mod ); 
+	}else if( stat_cont_mod->cm_state_start_stop == 0 ){
 
-		case 1:  //Switch ON power analog mod;
-			ISA_Command_100(reg302_ptr, analog_mod_config);
-			break;	
+		switch(number_command){
 
-		case 2:
-			ISA_Command_200(reg302_ptr, analog_mod_config);
-			break;
+			case 0x01:  //Switch ON power analog mod;
+				ISA_Command_100(reg302_ptr, analog_mod_config);
+				break;	
 
-		case 4:
-			ISA_Command_400(word1_D0_D15 , reg302_ptr, analog_mod_config);
-			break;
+			case 0x02:
+				ISA_Command_200(reg302_ptr, analog_mod_config);
+				break;
 
-		case 5:
-			ISA_Command_500(word1_D0_D15 , reg302_ptr, analog_mod_config);
-			break;
+			case 0x04:
+				ISA_Command_400(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
 
-		case 6:
-			ISA_Command_600(word1_D0_D15 , reg302_ptr, analog_mod_config);
-			break;
+			case 0x05:
+				ISA_Command_500(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
 
-		case 7:
-			ISA_Command_700(word1_D0_D15 , reg302_ptr, analog_mod_config);
-			break;
+			case 0x06:
+				ISA_Command_600(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
 
-		case 8:
-			ISA_Command_800(reg302_ptr, analog_mod_config);
-			break;
+			case 0x07:
+				ISA_Command_700(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
 
-		case 9: 
-			//TODO
-			break;
+			case 0x08:
+				ISA_Command_800(reg302_ptr, analog_mod_config);
+				break;
 
-		default:
-			Write_reg304_D0_D15(0x01);
-			reg302_ptr->reg_304_ready_get_command = 1;
-			Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
-		break;
+			case 0x09: 
+				ISA_Command_900( word1_D0_D15, reg302_ptr, stat_cont_mod ); 
+				break;
+
+			case 0x0A:
+				ISA_Command_A00(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
+
+			case 0x0B:
+				ISA_Command_B00(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				break;
+
+			default:
+				Write_reg304_D0_D15(0x02);
+				break;
+		}
 	}
 
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
 }
 
 

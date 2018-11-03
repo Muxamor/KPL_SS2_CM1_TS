@@ -14,11 +14,9 @@
 
  	uint8_t cm_state_start_stop; // 1=start 0=stop
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
- 	uint8_t block2_present;  // 1=block2 present 0 = block2 not present
-
-
-
+	
  }_STATUS_CONTROL_MODULE; 
+
 
  typedef struct{
 
@@ -32,6 +30,7 @@
  	uint8_t harware_7bit_reg302		  : 1;  
 
  }_REG_302; 
+
 
  typedef struct{
 
@@ -48,7 +47,7 @@
  uint32_t Read_reg304_D0_D15( void );
  void Write_reg304_D0_D15( uint32_t data_D0_D15 );
  void Write_reg302_D0_D7 ( uint32_t data_D0_D7 );
- void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
+ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[], _STATUS_CONTROL_MODULE *stat_cont_mod);
 
 
 

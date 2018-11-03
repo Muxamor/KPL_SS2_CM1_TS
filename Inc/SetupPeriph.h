@@ -12,6 +12,8 @@
 void LL_Init(void);
 void SystemClock_Config(void);
 void SetupGPIO(void);
+void Set_Input_mode_D0_D15(void);
+void Set_Output_mode_D0_D15(void);
 void USART1_Init(void);
 void USART3_Init(void);
 void I2C1_Init(void);
@@ -57,11 +59,6 @@ void MX_IWDG_Init(void);
 #define Enable_IO0_global_clock()   LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13)
 #define Disable_IO0_global_clock()  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13)
 
-/*For change mode direction input/output ISA data port  D0..D15   */
-#define Set_Output_mode_D0_D7()    LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_OUTPUT)
-#define Set_Output_mode_D8_D15()   LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_OUTPUT)
-#define Set_Input_mode_D0_D7()     LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_INPUT)
-#define Set_Input_mode_D8_D15()   LL_GPIO_SetPinMode(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7, LL_GPIO_MODE_INPUT)
 
 /*For set/reset CLK300 need use                 */
 #define Set_CLK300()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_8)

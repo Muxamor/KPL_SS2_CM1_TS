@@ -18,6 +18,9 @@
  ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
  ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
  ErrorStatus ISA_Command_800( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
+ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _STATUS_CONTROL_MODULE *status_control_mod );
+ ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
+ ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] );
 
 
 #ifdef __cplusplus

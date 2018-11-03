@@ -164,12 +164,6 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	/*For change mode D0..D15 need use  */
-	/*Set_Output_mode_D0_D7()   		*/
-	/*Set_Output_mode_D8_D15()   		*/
-	/*8Set_Input_mode_D0_D7()    		*/
-	/*Set_Iutput_mode_D8_D15()  		*/
-
 
 	/* Configure CLK300 (PC8)       */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
@@ -289,11 +283,44 @@ void SetupGPIO(void){
 	/*For set/reset CLK306   need use  */
 	/*Set_RST306()   				   */
 	/*Reset_RST306()   	       	  	   */
-
-
-
-
 }
+
+
+void Set_Input_mode_D0_D15(void){
+
+	LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT; //
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode =  LL_GPIO_MODE_INPUT; //
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+}
+
+void Set_Output_mode_D0_D15(void){
+	
+	LL_GPIO_InitTypeDef GPIO_InitStruct;
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT; //
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
+	GPIO_InitStruct.Mode =  LL_GPIO_MODE_OUTPUT; //
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
+	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+}
+
+
 
 void USART1_Init(void){
 
