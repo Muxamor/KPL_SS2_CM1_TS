@@ -195,7 +195,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 	if( stat_cont_mod->cm_state_start_stop == 1 && number_command == 9 ){ // Start mode
 
 		 ISA_Command_900( word1_D0_D15, reg302_ptr, stat_cont_mod ); 
-	}else if( stat_cont_mod->cm_state_start_stop == 0 ){
+	}else if( stat_cont_mod->cm_state_start_stop == 0 ){ // Stop mode
 
 		switch(number_command){
 
