@@ -7,6 +7,7 @@
 
 
 #include "stm32l4xx.h"
+#include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "stm32l4xx_ll_gpio.h"
 #include "SetupPeriph.h"
@@ -99,14 +100,21 @@ uint32_t Read_reg304_D0_D15( void ){
 	uint32_t data_D0_D15=0;
 
 	//Change diraction ISA bus
-	Set_Input_mode_D0_D7(); 		
+	Set_Input_mode_D0_D7();
 	Set_Input_mode_D8_D15();
-	Set_EN304();
+	Reset_EN304();
 	__NOP();
+	__NOP();
+	__NOP();
+	LL_mDelay(10);
 
-	data_D0_D7 = LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
+	///data_D0_D7 = LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
+	data_D0_D7 = LL_GPIO_ReadInputPort(GPIOA);
+	data_D0_D7 = data_D0_D7 & 0x000000FF;
+//	data_D8_D15 = LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
 
-	data_D8_D15 = LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
+	data_D8_D15 = LL_GPIO_ReadInputPort(GPIOC) & 0x000000FF;
+
 
 	//Reset_EN304();
 	//Set_Output_mode_D0_D7(); 		
@@ -131,7 +139,7 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
 	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
 
 	//Change diraction ISA bus
-	Reset_EN304();
+	Set_EN304();
 	Set_Output_mode_D0_D7(); 		
 	Set_Output_mode_D8_D15();
 
@@ -223,17 +231,13 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 			break;
 
 		case 9: 
-
+			//TODO
 			break;
 
-
-
-
-
-
-
-
 		default:
+			Write_reg304_D0_D15(0x01);
+			reg302_ptr->reg_304_ready_get_command = 1;
+			Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
 		break;
 	}
 

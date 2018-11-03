@@ -134,7 +134,7 @@ void SetupGPIO(void){
   	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
 
 
-	/* Enable/Sisable global clock  */
+	/* Enable/Disable global clock  */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_13;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
@@ -151,14 +151,14 @@ void SetupGPIO(void){
 	/* Configure data D0..D15 ISA port       */
 	/* D0..D7 = PA0..PA7, D8..D15 = PC0..PC7 */ 
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT; //
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
 	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
-	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+	GPIO_InitStruct.Mode =  LL_GPIO_MODE_OUTPUT; //
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;

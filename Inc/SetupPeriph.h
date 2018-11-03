@@ -75,6 +75,7 @@ void MX_IWDG_Init(void);
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10);\
 								__NOP();\
 								__NOP();\
+								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);\
 							  }
 
@@ -92,6 +93,7 @@ void MX_IWDG_Init(void);
 
 #define Pulse_CLK304()        {\
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);\
+								__NOP();\
 								__NOP();\
 								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);\

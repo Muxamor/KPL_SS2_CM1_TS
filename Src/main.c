@@ -50,16 +50,17 @@ int main(void){
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
-	USART1_Init();
-	USART3_Init();
-	I2C1_Init();
+	//USART1_Init();
+	//USART3_Init();
+	//I2C1_Init();
 	SetupInterrupt();
 	
-	Default_Setup_CM(REG302_ptr);
+	//Default_Setup_CM(REG302_ptr);
 
 	while(1){
 
 		if( FLAG_interrupt_INT3 == 1 ){
+			FLAG_interrupt_INT3 = 0;
 			Get_Parse_ISA_command (REG302_ptr, analog_mod_config );
 		}
 
