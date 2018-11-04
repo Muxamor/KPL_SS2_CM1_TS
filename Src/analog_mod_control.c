@@ -25,7 +25,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	//Answer at the 1 word command 100
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
 
 	//Get and processing second word
 	counter=0;
@@ -39,6 +39,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	FLAG_interrupt_INT3 = 0;
 
 	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+
 	ret1 = I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, (~((uint8_t)word2_D0_D15) ) ); // ON/OFF analog module in block1, Address IC = 0x20
 	ret2 = I2C_write_reg_TCA9554(I2C1, 0x26, 0x01, (~( (uint8_t)(word2_D0_D15>>8) ) ) ); // ON/OFF analog module in block1, Address IC = 0x26
 			
@@ -60,13 +61,13 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}
 
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
 
 	//Get and processing third word
 	counter=0;
 	while( FLAG_interrupt_INT3==0 ){
 		counter++;
-		if(counter==10000000){
+		if(counter==1000000){
 			Error_Handler();
 			goto exit_error;
 		}
@@ -200,7 +201,7 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	//Answer at the 1 word command 500
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
 
 	//Get and processing second word
 	counter=0;
@@ -323,7 +324,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	//Answer at the 1 word command 600
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
 
 	//Get and processing second word
 	counter=0;
@@ -559,7 +560,7 @@ ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	//Answer at the 1 word command A00
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
 
 	//Get and processing second word
 	while( FLAG_interrupt_INT3==0 ){

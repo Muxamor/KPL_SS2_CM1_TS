@@ -178,6 +178,7 @@ void SetupGPIO(void){
 	/*For set/reset CLK300 need use  */
 	/*Set_CLK300()   	             */
 	/*Reset_CLK300()   		         */
+	/*Pulse_CLK300()    		     */
 
 	/* Configure CLK302_1 (PC10)       */
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
@@ -207,6 +208,7 @@ void SetupGPIO(void){
 	/*For set/reset CLK302_2 need use  */
 	/*Set_CLK302_2()   				   */
 	/*Reset_CLK302_2()   	       	   */
+	/*Pulse_CLK302_2() 				   */
 
 
 	/* Configure CLK302_3 (PC12)       */
@@ -222,6 +224,7 @@ void SetupGPIO(void){
 	/*For set/reset CLK302_3 need use  */
 	/*Set_CLK302_3()   				   */
 	/*Reset_CLK302_3()   	       	   */
+	/*Pulse_CLK302_3() 				   */
 
 
 	/* Configure CLK304               */
@@ -462,7 +465,7 @@ void I2C1_Init(void){
   	LL_I2C_EnableClockStretching(I2C1);
 
   	I2C_InitStruct.PeripheralMode = LL_I2C_MODE_I2C;
-  	I2C_InitStruct.Timing = 0x00702991; // 0x10909CEC - Frequenci I2C=100 kHz  //0x00702991 - Frequenci I2C=400 kHz
+  	I2C_InitStruct.Timing = 0x10909CEC;//0x10909CEC - Frequenci I2C=100 kHz  //0x00702991 - Frequenci I2C=400 kHz
   	I2C_InitStruct.AnalogFilter = LL_I2C_ANALOGFILTER_ENABLE;
   	I2C_InitStruct.DigitalFilter = 0;
   	I2C_InitStruct.OwnAddress1 = 0;

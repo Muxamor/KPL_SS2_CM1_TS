@@ -46,7 +46,8 @@
  void Default_Setup_CM( _REG_302 *reg302_ptr );
  uint32_t Read_reg304_D0_D15( void );
  void Write_reg304_D0_D15( uint32_t data_D0_D15 );
- void Write_reg302_D0_D7 ( uint32_t data_D0_D7 );
+ void Write_reg302_D0_D7 ( uint32_t data_reg302, uint8_t write_CLK302_1, uint8_t write_CLK302_2, uint8_t write_CLK302_3 );
+ void Write_reg300_D0_D15 (uint32_t data_D0_D15);
  void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[], _STATUS_CONTROL_MODULE *stat_cont_mod);
 
 

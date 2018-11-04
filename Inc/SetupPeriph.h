@@ -64,6 +64,14 @@ void MX_IWDG_Init(void);
 #define Set_CLK300()       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_8)
 #define Reset_CLK300()     LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8)
 
+#define Pulse_CLK300()        {\
+								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_8);\
+								__NOP();\
+								__NOP();\
+								__NOP();\
+								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8);\
+							  }
+
 /*For set/reset CLK302_1 need use               */
 #define Set_CLK302_1()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10)
 #define Reset_CLK302_1()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10)
@@ -80,9 +88,28 @@ void MX_IWDG_Init(void);
 #define Set_CLK302_2()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11)
 #define Reset_CLK302_2()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11)
 
+#define Pulse_CLK302_2()      {\
+								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11);\
+								__NOP();\
+								__NOP();\
+								__NOP();\
+								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);\
+							  }
+
 /*For set/reset CLK302_3 need use               */
 #define Set_CLK302_3()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12)
 #define Reset_CLK302_3()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12)
+
+#define Pulse_CLK302_3()      {\
+								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12);\
+								__NOP();\
+								__NOP();\
+								__NOP();\
+								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12);\
+							  }
+
+
+
 
 /*For set/reset CLK304 need use                 */
 #define Set_CLK304()          LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9)

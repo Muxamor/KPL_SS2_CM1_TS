@@ -40,13 +40,14 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	Reset_CLK302_2();
 	Reset_CLK302_3();
 	Reset_CLK304();
-	Reset_EN304();
+	Set_EN304();
+	//Set_RST304();
 	Set_RST304();
 	Reset_CLK306();
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
-	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
+ 	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
 	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0xFF); // OFF all analog module in block, Address IC = 0x20
 	//Address IC TCA9554 = 0x26
 	I2C_write_reg_TCA9554(I2C1 , 0x26, 0x03, 0x00); // Set pin as output, Address IC = 0x26
@@ -67,7 +68,6 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	}
 	////////////////////////////////////////
 
-
 	//Check that  Block 2 is present
 	uint16_t mass[4] = {0x06,0x00,0x00,0x00};
 	uint32_t tmp = 0;
@@ -80,11 +80,9 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	}else{
 		reg302_ptr->block2_ready = 1;
 	}
-	////////////////////////////////////////
-
 
 	//Write default statu reg302
-	Write_reg302_D0_D7 ( *(uint32_t *)reg302_ptr );
+	Write_reg302_D0_D7 ( *(uint32_t *)reg302_ptr, 1, 1, 0 );
 
 }
 
@@ -105,10 +103,9 @@ uint32_t Read_reg304_D0_D15( void ){
 	Reset_EN304();
 
 	///data_D0_D7 = LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
-	data_D0_D7 = LL_GPIO_ReadInputPort(GPIOA);
-	data_D0_D7 = data_D0_D7 & 0x000000FF;
-//	data_D8_D15 = LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
+	data_D0_D7 = LL_GPIO_ReadInputPort(GPIOA) & 0x000000FF;
 
+	//data_D8_D15 = LL_GPIO_IsInputPinSet(GPIOC, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3|LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7);
 	data_D8_D15 = LL_GPIO_ReadInputPort(GPIOC) & 0x000000FF;
 
 	data_D0_D15 = ( data_D8_D15 << 8 ) | data_D0_D7;
@@ -136,11 +133,11 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
 	__NOP();
 
 	//write bite to PA0..PA7 
+
 	data_D0_D7 = data_D0_D15 & 0x000000FF;
 	invert_data_D0_D7 = ( ~ data_D0_D7 ) & 0x000000FF;
-	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits 
+	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits
 	
-
 	data_D8_D15 =  (data_D0_D15 >> 8 ) & 0x000000FF;
 	invert_data_D8_D15 = ( ~ data_D8_D15 ) & 0x000000FF;
 	WRITE_REG(GPIOC->BSRR,  ( ( invert_data_D8_D15 << 16 ) | data_D8_D15) ); //Set bits. Maybe use BRR register to reset bits 
@@ -153,13 +150,12 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
   * @param  data_D0_D7
   * @retval void
   */
-void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
+void Write_reg302_D0_D7 ( uint32_t data_reg302, uint8_t write_CLK302_1, uint8_t write_CLK302_2, uint8_t write_CLK302_3 ){
 
-	
 	uint32_t invert_data_D0_D7=0, data_D0_D7=0;
 
 	//Change diraction ISA bus
-	Reset_EN304();
+	Set_EN304();
 
 	Set_Output_mode_D0_D15();
 	__NOP();
@@ -167,11 +163,49 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302 ){
 	//write bite to PA0..PA7 
 	data_D0_D7 = data_reg302 & 0x000000FF;
 	invert_data_D0_D7 = ( ~ data_D0_D7 ) & 0x000000FF;
-	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits 
+	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits
 	
-	Pulse_CLK302_1();
+	if (write_CLK302_1 == 1 ){
+		Pulse_CLK302_1();
+	}
+
+	if( write_CLK302_2 == 1 ){
+		Pulse_CLK302_2();
+	}
+
+	if( write_CLK302_3){
+		Pulse_CLK302_3();
+	}
 }
 
+
+/**
+  * @brief  Write reg300 ISA bus D0..D7
+  * @param  data_D0_D15
+  * @retval void
+  */
+void Write_reg300_D0_D15 (uint32_t data_D0_D15){
+
+	uint32_t data_D0_D7=0, data_D8_D15=0;
+	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
+
+	//Change diraction ISA bus
+	Set_EN304();
+
+	Set_Output_mode_D0_D15();
+	__NOP();
+
+	//write bite to PA0..PA7
+	data_D0_D7 = data_D0_D15 & 0x000000FF;
+	invert_data_D0_D7 = ( ~ data_D0_D7 ) & 0x000000FF;
+	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits
+
+	data_D8_D15 =  (data_D0_D15 >> 8 ) & 0x000000FF;
+	invert_data_D8_D15 = ( ~ data_D8_D15 ) & 0x000000FF;
+	WRITE_REG(GPIOC->BSRR,  ( ( invert_data_D8_D15 << 16 ) | data_D8_D15) ); //Set bits. Maybe use BRR register to reset bits
+
+	Pulse_CLK300();
+}
 
 
 
@@ -246,7 +280,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 	}
 
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr);
+	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr, 1, 1, 0);
 }
 
 

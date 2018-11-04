@@ -81,7 +81,7 @@ uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
 		counter=0;
 		while( LL_USART_IsActiveFlag_RXNE(USARTx) == RESET ){
 			counter++;
-			if(counter==10000000){
+			if(counter==100000){
 				Error_Handler();
 				goto exit_error;
 			}
