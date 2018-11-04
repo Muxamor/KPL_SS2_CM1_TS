@@ -13,6 +13,7 @@
  typedef struct{
 
  	uint8_t cm_state_start_stop; // 1=start 0=stop
+ 	uint8_t cm_chack_status_analog_module; //1=need check status analog modules
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
 	
  }_STATUS_CONTROL_MODULE; 
@@ -35,12 +36,26 @@
  typedef struct{
 
  	uint8_t power_module_on; // =1 analog module is on, =0 analog module is off
+ 	uint8_t module_dead; // =1 analog module is dead, =0 analog module is ok  
  	uint8_t amp_factor_K1;
  	uint8_t amp_factor_K2;
  	uint8_t Fcut_value; 
  	uint8_t Status_module; 
 
+
  }_ANALOG_MODULE_CONF; 
+
+
+  typedef struct{
+
+ 	uint8_t head_byte; // 
+ 	uint8_t cyclic_code; // 
+ 	uint8_t ADC_data_byte_2;
+ 	uint8_t ADC_data_byte_1;
+ 
+ }_ADC_DATA_Package; 
+
+
 
 
  void Default_Setup_CM( _REG_302 *reg302_ptr );
