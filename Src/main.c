@@ -9,8 +9,9 @@
 
 #include  <stdio.h>
 
+
+
 /****************************TODO*************************
-1. Check first front signal I2C on the board. Speed = 400kHz 
 
 						Attention !!!!!!
 The structure of the software is not optimal because it was originally
@@ -50,10 +51,6 @@ int main(void){
 	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
  	_FIFO fifo_buf, *FIFO_ADC_DATA_ptr = &fifo_buf;
-
- 	FIFO_ADC_DATA_ptr->FIFO_HEAD = 0;
- 	FIFO_ADC_DATA_ptr->FIFO_TAIL = 0;
- 	FIFO_ADC_DATA_ptr->FIFO_COUNT_DATA = 0;
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
@@ -96,6 +93,11 @@ int main(void){
 
 			//TODO Check status enabled analog module. If we have wrong status need reconfig module.
 		
+			FIFO_ADC_DATA_ptr->FIFO_HEAD = 0;
+ 			FIFO_ADC_DATA_ptr->FIFO_TAIL = 0;
+ 			FIFO_ADC_DATA_ptr->FIFO_COUNT_DATA = 0;
+ 			counter_ADC_data_ready = 0;
+			loop_counter = 0;
 			INTERRUPT_PULSE_Enable(); 
 		    FLAG_interrupt_PULSE = 0; 
 		}

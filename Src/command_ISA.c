@@ -455,8 +455,8 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		mass[1] = 0x00FF;
 		status_control_mod->cm_state_start_stop = 1; //Set Start 
 		status_control_mod->cm_check_status_analog_mod = 1; 
-		counter_ADC_data_ready = 0;
-		loop_counter = 0;
+		//counter_ADC_data_ready = 0;
+		//loop_counter = 0;
 		//INTERRUPT_PULSE_Enable();
 		//FLAG_interrupt_PULSE = 0;
 
@@ -464,6 +464,7 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		mass[1] = 0x0000;
 		status_control_mod-> cm_state_start_stop = 0; //Set Stop state
 		INTERRUPT_PULSE_Disable();
+		FLAG_interrupt_PULSE = 0;
 	}
 
 	Data_transmite_UART_9B (mass , 4,  USART1);
