@@ -209,6 +209,25 @@ void Write_reg300_D0_D15 (uint32_t data_D0_D15){
 }
 
 
+uint8_t wait_interrupt_INT3(void){
+	
+	uint32_t counter=0;
+
+	while( FLAG_interrupt_INT3==0 ){
+
+		counter++;
+		
+		if(counter==1000000){
+			return 1;
+		}
+	}
+
+	FLAG_interrupt_INT3 = 0;
+
+	return 0;
+}
+
+
 
 /**
   * @brief  Get and parse command from ISA
