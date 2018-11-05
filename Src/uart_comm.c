@@ -93,6 +93,7 @@ uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
 	return (receive_data[0]<<24) | (receive_data[1]<<16) | (receive_data[2]<<8) | receive_data[3];
 
 	exit_error:
+		LL_USART_ClearFlag_ORE(USARTx);
 		return 0xFFFFFFFF;
 }
 

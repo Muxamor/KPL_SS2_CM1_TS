@@ -158,7 +158,7 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 		USARTx = USART3;
 	}
 
-	mass[0] = (word1_D0_D15 & 0x00F8)| 0x0002; // Set K1 command
+	mass[0] = (word1_D0_D15 & 0x00F8) | 0x0002; // Set K1 command
 	mass[1] = word1_D0_D15 & 0x0003;
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;

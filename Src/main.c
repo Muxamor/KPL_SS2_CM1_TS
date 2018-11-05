@@ -66,6 +66,7 @@ int main(void){
 	loop_counter = 0;
 	counter_ADC_data_ready =0;
 
+
 	while(1){
 
 		if( FLAG_interrupt_INT3 == 1 ){

@@ -112,6 +112,9 @@ uint32_t Read_reg304_D0_D15( void ){
 
 	data_D0_D15 = data_D0_D15 & 0x0000FFFF; //clear MSB 
 
+	//Reset_RST304();
+	//Set_RST304();
+
 	return data_D0_D15;
 }
 
