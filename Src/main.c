@@ -57,6 +57,7 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 	SetupInterrupt();
+	//IWDG_Init();
 
 	Default_Setup_CM(REG302_ptr);
 
@@ -66,6 +67,7 @@ int main(void){
 	loop_counter = 0;
 	counter_ADC_data_ready =0;
 
+	//LL_IWDG_ReloadCounter(IWDG);
 
 	while(1){
 
@@ -81,10 +83,10 @@ int main(void){
 		}
 
 		//Pre start mode chack status analog module
-		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_chack_status_analog_module == 1 ){
-			STATUS_CONT_MOD_ptr->cm_chack_status_analog_module = 0;
-			INTERRUPT_PULSE_Enable(); //???? Where is on ???? 
-		    FLAG_interrupt_PULSE = 0; //???? Where is reset ???? 
+		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_chack_status_analog_mod == 1 ){
+			STATUS_CONT_MOD_ptr->cm_chack_status_analog_mod = 0;
+			INTERRUPT_PULSE_Enable(); //???? Where is on ????
+		    FLAG_interrupt_PULSE = 0; //???? Where is reset ????
 		}
 
 

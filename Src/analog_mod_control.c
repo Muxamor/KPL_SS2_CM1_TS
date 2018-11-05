@@ -378,7 +378,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 }
 
 
-ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 
 	uint8_t addr_analog_mod=0;
 	uint8_t number_request=0;
@@ -483,7 +483,7 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 }
 
 
-ErrorStatus ISA_Command_800( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+void ISA_Command_800( void ){
 	
 	I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, 0xFF); // ON/OFF analog module in block1, Address IC = 0x20
 	I2C_write_reg_TCA9554(I2C1, 0x26, 0x01,  0xFF); // ON/OFF analog module in block1, Address IC = 0x26
@@ -509,10 +509,9 @@ ErrorStatus ISA_Command_800( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 
 	while(1); // Wait watch dog
 
-	return SUCCESS; 
 }
 
-ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _STATUS_CONTROL_MODULE *status_control_mod ){
+ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *status_control_mod ){
 
 	uint8_t state_control_module = 0;
 	uint16_t mass[4];
@@ -526,8 +525,8 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _STATU
 	if(state_control_module == 0x01){//Start mode
 
 		mass[1] = 0x00FF;
-		status_control_mod->cm_state_start_stop = 1; //Set Start state
-		status_control_mod->cm_chack_status_analog_module = 1;
+		status_control_mod->cm_state_start_stop = 1; //Set Start state??????
+		status_control_mod->cm_chack_status_analog_mod = 1;//// ????
 		counter_ADC_data_ready = 0;
 		loop_counter = 0;
 		//INTERRUPT_PULSE_Enable(); //???? Where is on ???? 
@@ -549,7 +548,7 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _STATU
 }
 
 
-ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 
 	uint8_t addr_watch_registr = 0;
 	uint8_t value_watch_registr = 0;
@@ -595,7 +594,7 @@ ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 }
 
-ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
+ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15 ){
 
 	uint8_t addr_read_watch_registr = 0;
 	uint8_t value_read_watch_registr = 0;

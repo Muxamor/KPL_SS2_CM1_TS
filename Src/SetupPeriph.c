@@ -132,6 +132,7 @@ void SetupGPIO(void){
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOC);
 	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
   	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOD);
+  	LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOH);
 
 
 	/* Enable/Disable global clock  */
@@ -271,6 +272,7 @@ void SetupGPIO(void){
 	/*For set/reset CLK304   need use  */
 	/*Set_RST304()   				   */
 	/*Reset_RST304()   	       	  	   */
+	/*Pulse_RST304()   	       	  	   */
 
 
 	/* Configure CLK306               */
@@ -284,8 +286,9 @@ void SetupGPIO(void){
 	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);
 
 	/*For set/reset CLK306   need use  */
-	/*Set_RST306()   				   */
-	/*Reset_RST306()   	       	  	   */
+	/*Set_CLK306()   				   */
+	/*Set_Reset306()   				   */
+
 }
 
 
@@ -547,7 +550,7 @@ void SetupInterrupt(void){
   * @retval None
 */
 
-void MX_IWDG_Init(void){
+void IWDG_Init(void){
 
     LL_IWDG_Enable(IWDG);
   	LL_IWDG_EnableWriteAccess(IWDG);

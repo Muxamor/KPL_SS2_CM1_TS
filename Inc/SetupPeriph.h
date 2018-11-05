@@ -18,7 +18,7 @@ void USART1_Init(void);
 void USART3_Init(void);
 void I2C1_Init(void);
 void SetupInterrupt(void);
-void MX_IWDG_Init(void);
+void IWDG_Init(void);
 
 /*The table below gives the allowed values of the pre-emption priority and subpriority according
  to the Priority Grouping configuration performed by NVIC_PriorityGroupConfig function
@@ -131,6 +131,14 @@ void MX_IWDG_Init(void);
 /*For set/reset RST304 need use                 */
 #define Set_RST304()          LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1)
 #define Reset_RST304()        LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1)
+
+#define Pulse_RST304()        {\
+								LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+								__NOP();\
+								__NOP();\
+								__NOP();\
+								LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+							  }
 
 /*For set/reset CLK306 need use                 */
 #define Set_CLK306()          LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2)

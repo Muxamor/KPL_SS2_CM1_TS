@@ -112,8 +112,7 @@ uint32_t Read_reg304_D0_D15( void ){
 
 	data_D0_D15 = data_D0_D15 & 0x0000FFFF; //clear MSB 
 
-	//Reset_RST304();
-	//Set_RST304();
+	Pulse_RST304();
 
 	return data_D0_D15;
 }
@@ -231,7 +230,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 
 	if( stat_cont_mod->cm_state_start_stop == 1 && number_command == 9 ){ // Start mode
 
-		 ISA_Command_900( word1_D0_D15, reg302_ptr, stat_cont_mod ); 
+		 ISA_Command_900( word1_D0_D15, stat_cont_mod );
 	}else if( stat_cont_mod->cm_state_start_stop == 0 ){ // Stop mode
 
 		switch(number_command){
@@ -245,35 +244,35 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 				break;
 
 			case 0x04:
-				ISA_Command_400(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_400(word1_D0_D15, reg302_ptr, analog_mod_config);
 				break;
 
 			case 0x05:
-				ISA_Command_500(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_500(word1_D0_D15, reg302_ptr, analog_mod_config);
 				break;
 
 			case 0x06:
-				ISA_Command_600(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_600(word1_D0_D15, reg302_ptr, analog_mod_config);
 				break;
 
 			case 0x07:
-				ISA_Command_700(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_700(word1_D0_D15, reg302_ptr);
 				break;
 
 			case 0x08:
-				ISA_Command_800(reg302_ptr, analog_mod_config);
+				ISA_Command_800();
 				break;
 
 			case 0x09: 
-				ISA_Command_900( word1_D0_D15, reg302_ptr, stat_cont_mod ); 
+				ISA_Command_900( word1_D0_D15, stat_cont_mod);
 				break;
 
 			case 0x0A:
-				ISA_Command_A00(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_A00(word1_D0_D15, reg302_ptr);
 				break;
 
 			case 0x0B:
-				ISA_Command_B00(word1_D0_D15 , reg302_ptr, analog_mod_config);
+				ISA_Command_B00(word1_D0_D15);
 				break;
 
 			default:
