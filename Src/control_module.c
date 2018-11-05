@@ -13,7 +13,7 @@
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "uart_comm.h"
-#include "analog_mod_control.h"
+#include "command_ISA.h"
 #include "control_module.h"
 
 
@@ -208,6 +208,11 @@ void Write_reg300_D0_D15 (uint32_t data_D0_D15){
 	Pulse_CLK300();
 }
 
+/**
+  * @brief  Wait interrupt_INT3
+  * @param  data_D0_D15
+  * @retval 0 or 1 = ERROR 
+ */
 
 uint8_t wait_interrupt_INT3(void){
 	

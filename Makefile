@@ -47,7 +47,7 @@ Src/SetupPeriph.c \
 Src/i2c_cm.c \
 Src/uart_comm.c \
 Src/control_module.c\
-Src/analog_mod_control.c
+Src/command_ISA.c
 
 
 

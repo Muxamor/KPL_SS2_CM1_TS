@@ -1,7 +1,7 @@
 
 
-#ifndef __ANALOG_MOD_CONTROL_H
-#define __ANALOG_MOD_CONTROL_H
+#ifndef __COMMAND_ISA_H
+#define __COMMAND_ISA_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -28,4 +28,4 @@
 #endif
 
 
-#endif /* __ANALOG_MOD_CONTROL_H */
+#endif /* __COMMAND_ISA_H */

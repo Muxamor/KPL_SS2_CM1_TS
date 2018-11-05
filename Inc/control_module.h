@@ -6,9 +6,31 @@
  extern "C" {
 #endif
 
- 
 
  extern void _Error_Handler(char *, int);
+
+
+
+  typedef struct{
+
+ 	uint8_t head_byte; // 
+ 	uint8_t cyclic_code; // 
+ 	uint8_t ADC_data_byte_MSB;
+ 	uint8_t ADC_data_byte_LSB;
+ 
+ }_ADC_DATA_Package; 
+
+
+ #define FIFO_SIZE 4096
+	
+ typedef struct{
+
+ 	_ADC_DATA_Package FIFO_buf_ADC[FIFO_SIZE];
+ 	uint16_t FIFO_HEAD;
+	uint16_t FIFO_TAIL;
+	uint16_t FIFO_COUNT_DATA;
+
+ }_FIFO;
 
  typedef struct{
 
@@ -46,18 +68,6 @@
  }_ANALOG_MODULE_CONF; 
 
 
-  typedef struct{
-
- 	uint8_t head_byte; // 
- 	uint8_t cyclic_code; // 
- 	uint8_t ADC_data_byte_2;
- 	uint8_t ADC_data_byte_1;
- 
- }_ADC_DATA_Package; 
-
-
-
-
  void Default_Setup_CM( _REG_302 *reg302_ptr );
  uint32_t Read_reg304_D0_D15( void );
  void Write_reg304_D0_D15( uint32_t data_D0_D15 );
@@ -65,7 +75,6 @@
  void Write_reg300_D0_D15 (uint32_t data_D0_D15);
  uint8_t wait_interrupt_INT3(void);
  void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[], _STATUS_CONTROL_MODULE *stat_cont_mod);
-
 
 
 #ifdef __cplusplus

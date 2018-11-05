@@ -4,7 +4,7 @@
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "uart_comm.h"
-#include "analog_mod_control.h"
+#include "command_ISA.h"
 #include "control_module.h"
 
 #include  <stdio.h>
@@ -50,6 +50,13 @@ int main(void){
 
 	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
+
+ 	_FIFO fifo_buf, *FIFO_ADC_DATA = &fifo_buf;
+
+
+
+
+
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
 	SetupGPIO();
@@ -71,10 +78,12 @@ int main(void){
 
 	while(1){
 
+		//Processing command from PC 
 		if( FLAG_interrupt_INT3 == 1 ){
 			FLAG_interrupt_INT3 = 0;
 			Get_Parse_ISA_command (REG302_ptr, analog_mod_config, STATUS_CONT_MOD_ptr);
 		}
+
 
 		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod ==0 ){
 			FLAG_interrupt_PULSE=0;

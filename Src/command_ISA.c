@@ -7,7 +7,7 @@
 #include "i2c_cm.h"
 #include "uart_comm.h"
 #include "control_module.h"
-#include "analog_mod_control.h"
+#include "command_ISA.h"
 
 #include "global_variables.h"
 
@@ -336,7 +336,6 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	
 	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 	number_request = ((uint8_t)word1_D0_D15) & 0x07;
-
 
 	if(addr_analog_mod <= 15){
 		USARTx = USART1;
