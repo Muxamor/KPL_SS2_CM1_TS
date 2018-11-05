@@ -10,6 +10,7 @@
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_i2c.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_iwdg.h"
 #include "SetupPeriph.h"
 #include "i2c_cm.h"
 #include "uart_comm.h"
@@ -220,9 +221,9 @@ uint8_t wait_interrupt_INT3(void){
 
 	while( FLAG_interrupt_INT3==0 ){
 
+		LL_IWDG_ReloadCounter(IWDG);
 		counter++;
-		
-		if(counter==1000000){
+		if(counter==100000){
 			return 1;
 		}
 	}

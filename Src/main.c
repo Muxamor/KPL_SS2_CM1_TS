@@ -47,15 +47,13 @@ int main(void){
 
 	 _STATUS_CONTROL_MODULE *STATUS_CONT_MOD_ptr = &stat_contr_mod;
 
-
 	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
+ 	_FIFO fifo_buf, *FIFO_ADC_DATA_ptr = &fifo_buf;
 
- 	_FIFO fifo_buf, *FIFO_ADC_DATA = &fifo_buf;
-
-
-
-
+ 	FIFO_ADC_DATA_ptr->FIFO_HEAD = 0;
+ 	FIFO_ADC_DATA_ptr->FIFO_TAIL = 0;
+ 	FIFO_ADC_DATA_ptr->FIFO_COUNT_DATA = 0;
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
@@ -72,7 +70,7 @@ int main(void){
 	FLAG_interrupt_INT3 = 0;
 	FLAG_interrupt_PULSE = 0;
 	loop_counter = 0;
-	counter_ADC_data_ready =0;
+	counter_ADC_data_ready = 0;
 
 	//LL_IWDG_ReloadCounter(IWDG);
 
