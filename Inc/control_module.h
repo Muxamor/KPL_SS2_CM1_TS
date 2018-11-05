@@ -13,7 +13,7 @@
  typedef struct{
 
  	uint8_t cm_state_start_stop; // 1=start 0=stop
- 	uint8_t cm_chack_status_analog_mod; //1=need check status analog modules
+ 	uint8_t cm_check_status_analog_mod; //1=need check status analog modules
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
 	
  }_STATUS_CONTROL_MODULE; 

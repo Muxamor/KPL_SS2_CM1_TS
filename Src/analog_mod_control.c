@@ -525,11 +525,11 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 	if(state_control_module == 0x01){//Start mode
 
 		mass[1] = 0x00FF;
-		status_control_mod->cm_state_start_stop = 1; //Set Start state??????
-		status_control_mod->cm_chack_status_analog_mod = 1;//// ????
+		status_control_mod->cm_state_start_stop = 1; //Set Start 
+		status_control_mod->cm_check_status_analog_mod = 1; 
 		counter_ADC_data_ready = 0;
 		loop_counter = 0;
-		//INTERRUPT_PULSE_Enable(); //???? Where is on ???? 
+		//INTERRUPT_PULSE_Enable();
 		//FLAG_interrupt_PULSE = 0;
 
 	}else{ // Stop mode

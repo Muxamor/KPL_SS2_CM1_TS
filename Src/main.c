@@ -76,17 +76,21 @@ int main(void){
 			Get_Parse_ISA_command (REG302_ptr, analog_mod_config, STATUS_CONT_MOD_ptr);
 		}
 
-		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1){
+		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod ==0 ){
 			FLAG_interrupt_PULSE=0;
 
 
 		}
 
 		//Pre start mode chack status analog module
-		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_chack_status_analog_mod == 1 ){
-			STATUS_CONT_MOD_ptr->cm_chack_status_analog_mod = 0;
-			INTERRUPT_PULSE_Enable(); //???? Where is on ????
-		    FLAG_interrupt_PULSE = 0; //???? Where is reset ????
+		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 1 ){
+
+			STATUS_CONT_MOD_ptr->cm_check_status_analog_mod = 0;
+
+			//TODO Check status enabled analog module. If we have wrong status need reconfig module.
+		
+			INTERRUPT_PULSE_Enable(); 
+		    FLAG_interrupt_PULSE = 0; 
 		}
 
 

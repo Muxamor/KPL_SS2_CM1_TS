@@ -41,7 +41,6 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	Reset_CLK302_3();
 	Reset_CLK304();
 	Set_EN304();
-	//Set_RST304();
 	Set_RST304();
 	Reset_CLK306();
 
@@ -264,7 +263,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 				break;
 
 			case 0x09: 
-				ISA_Command_900( word1_D0_D15, stat_cont_mod);
+				ISA_Command_900(word1_D0_D15, stat_cont_mod);
 				break;
 
 			case 0x0A:

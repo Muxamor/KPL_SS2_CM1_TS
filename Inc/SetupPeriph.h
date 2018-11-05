@@ -89,12 +89,12 @@ void IWDG_Init(void);
 #define Reset_CLK302_2()      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11)
 
 #define Pulse_CLK302_2()      {\
-								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11);\
-								__NOP();\
-								__NOP();\
-								__NOP();\
-								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);\
-							  }
+								                LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11);\
+								                __NOP();\
+								                __NOP();\
+								                __NOP();\
+								                LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);\
+							                }
 
 /*For set/reset CLK302_3 need use               */
 #define Set_CLK302_3()        LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12)
@@ -133,16 +133,24 @@ void IWDG_Init(void);
 #define Reset_RST304()        LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1)
 
 #define Pulse_RST304()        {\
-								LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1);\
-								__NOP();\
-								__NOP();\
-								__NOP();\
-								LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);\
-							  }
+								                LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+								                __NOP();\
+								                __NOP();\
+								                __NOP();\
+								                LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+							                }
 
 /*For set/reset CLK306 need use                 */
 #define Set_CLK306()          LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2)
 #define Reset_CLK306()        LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2)
+
+#define Pulse_CLK306()        {\
+                                LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2);\
+                                __NOP();\
+                                __NOP();\
+                                __NOP();\
+                                LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);\
+                              }                              
 
 /*For enable/desible interrupt INT3 need use:   */
 #define INT3_Enable()         LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_2)             

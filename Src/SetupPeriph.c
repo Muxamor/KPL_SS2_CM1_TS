@@ -287,8 +287,8 @@ void SetupGPIO(void){
 
 	/*For set/reset CLK306   need use  */
 	/*Set_CLK306()   				   */
-	/*Set_Reset306()   				   */
-
+	/*Reset_CLK306()   				   */
+	/*Pulse_CLK306()   				   */
 }
 
 
