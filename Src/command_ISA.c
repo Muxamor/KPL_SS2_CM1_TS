@@ -329,7 +329,7 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	uint16_t mass[4];
 	uint16_t table_amp_factorK2[12] = {0xFFF, 0x400, 0x200, 0x100, 0x080, 0x040, 0x020, 0x010, 0x008, 0x004, 0x002, 0x001 }; 
 
-	uint16_t answer_ISA_D15_D0=0X0000;
+	uint16_t answer_ISA_D15_D0=0x0000;
 	uint32_t tmp=0;
 
 	USART_TypeDef *USARTx;
@@ -346,23 +346,23 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	switch(number_request ){
 
 		case 0x01: //Request amplifier factor K1
-			mass[0] = (word1_D0_D15 & 0x00F8)| 0x02; 	
+			mass[0] = (word1_D0_D15 & 0x00F8) | 0x0002;
 			break;
 
 		case 0x02: //Request amplifier factor K2
-			mass[0] = (word1_D0_D15 & 0x00F8)| 0x03; 	
+			mass[0] = (word1_D0_D15 & 0x00F8) | 0x0003;
 			break;
 
 		case 0x03: //Request Fcut
-			mass[0] = (word1_D0_D15 & 0x00F8)| 0x04; 
+			mass[0] = (word1_D0_D15 & 0x00F8) | 0x0004;
 			break;
 
 		case 0x05: // Request state byte
-			mass[0] = (word1_D0_D15 & 0x00F8)| 0x05; 
+			mass[0] = (word1_D0_D15 & 0x00F8) | 0x0005;
 			break;
 
 		default:
-			mass[0] = (word1_D0_D15 & 0x00F8)| 0x05; 
+			mass[0] = (word1_D0_D15 & 0x00F8) | 0x0005;
 			break;
 	}
 
@@ -370,10 +370,14 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
+	printf("mas[0]=%lu  mas[1]=%lu mas[2]=%lu mas[3]=%lu\r\n",(unsigned long) mass[0], (unsigned long) mass[1], (unsigned long) mass[2], (unsigned long) mass[3] );
+
 	Data_transmite_UART_9B(mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B(4 , USARTx);
 
-	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
+	printf("tmp=%lu \r\n ",(unsigned long)tmp);
+
+	if( tmp == 0xFFFFFFFF ){
 		if( USARTx == USART3 ){
 			reg302_ptr->block2_ready = 0;
 		}
@@ -401,7 +405,7 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 				break;
 
 			case 0x05: // Request state byte
-				answer_ISA_D15_D0 = ( (uint16_t)(tmp>>16) ) & 0xFF00;
+				answer_ISA_D15_D0 = ( (uint16_t)(tmp>>16) ) & 0x00FF;
 				break;
 
 			case 0x04:
@@ -414,6 +418,8 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 				answer_ISA_D15_D0 = 0x0001;
 				break;
 		}
+
+    	printf("answer_ISA_D15_D0=%lu \r\n ",(unsigned long) answer_ISA_D15_D0);
 
 		Write_reg304_D0_D15(answer_ISA_D15_D0);
 	}
@@ -467,8 +473,8 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		FLAG_interrupt_PULSE = 0;
 	}
 
-	Data_transmite_UART_9B (mass , 4,  USART1);
-	Data_transmite_UART_9B (mass , 4,  USART3);
+	Data_transmite_UART_9B (mass, 4,  USART1);
+	Data_transmite_UART_9B (mass, 4,  USART3);
 
 	Write_reg304_D0_D15(0x01);
 

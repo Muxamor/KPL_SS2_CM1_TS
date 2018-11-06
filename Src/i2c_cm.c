@@ -31,7 +31,7 @@ ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint
 	uint32_t counter = 0;
 	while(LL_I2C_IsActiveFlag_BUSY(I2Cx)==SET){
 		counter++;
-		if(counter==100000){//aproximate 150ms
+		if(counter==100000){//
 			Error_Handler();
 			goto exit_error;
 		}
@@ -45,7 +45,7 @@ ErrorStatus I2C_write_reg_TCA9554(I2C_TypeDef *I2Cx , uint8_t SlaveAddr_IC, uint
 	counter=0;
 	while(LL_I2C_IsActiveFlag_TXE(I2Cx)==RESET){
 		counter++;
-		if(counter==100000){//aproximate 150ms
+		if(counter==100000){
 			LL_I2C_ClearFlag_TXE(I2Cx);
 			Error_Handler();
 			goto exit_error;

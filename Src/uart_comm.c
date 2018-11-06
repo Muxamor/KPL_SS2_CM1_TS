@@ -1,11 +1,4 @@
- /*
- * uart_comm.c
- *
- *  Created on: Jul 10, 2018
- *      Author: muxamor
- */
 
-/* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx.h"
 #include "stm32l4xx_ll_utils.h"
 #include "stm32l4xx_ll_gpio.h"
@@ -28,7 +21,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 	counter=0;
 	while( LL_USART_IsActiveFlag_TXE(USARTx) == RESET ){
 		counter++;
-		if(counter==100000){
+		if(counter==1000000){
 			Error_Handler();
 			return ERROR;
 		}
@@ -47,7 +40,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 		counter=0;
 		while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
 			counter++;
-			if(counter==100000){//150ms
+			if(counter==1000000){//150ms
 				Error_Handler();
 				return ERROR;
 			}
@@ -73,7 +66,7 @@ uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
 		counter=0;
 		while( LL_USART_IsActiveFlag_RXNE(USARTx) == RESET ){
 			counter++;
-			if(counter==100000){
+			if(counter==1000000){
 				Error_Handler();
 				LL_USART_ClearFlag_ORE(USARTx);
 				return 0xFFFFFFFF;
@@ -103,7 +96,7 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 
 			counter++;
 
-			if(counter==100000){
+			if(counter==1000000){
 				LL_USART_ClearFlag_ORE(USARTx);
 				return ERROR;
 			}

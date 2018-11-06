@@ -123,7 +123,7 @@ uint32_t Read_reg304_D0_D15( void ){
   * @param  void
   * @retval data D0..D15
   */
-void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
+void Write_reg304_D0_D15( uint16_t data_D0_D15 ){
 
 	uint32_t data_D0_D7=0, data_D8_D15=0;
 	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
@@ -152,7 +152,7 @@ void Write_reg304_D0_D15( uint32_t data_D0_D15 ){
   * @param  data_D0_D7
   * @retval void
   */
-void Write_reg302_D0_D7 ( uint32_t data_reg302, uint8_t write_CLK302_1, uint8_t write_CLK302_2, uint8_t write_CLK302_3 ){
+void Write_reg302_D0_D7 ( uint16_t data_reg302, uint8_t write_CLK302_1, uint8_t write_CLK302_2, uint8_t write_CLK302_3 ){
 
 	uint32_t invert_data_D0_D7=0, data_D0_D7=0;
 
@@ -186,7 +186,7 @@ void Write_reg302_D0_D7 ( uint32_t data_reg302, uint8_t write_CLK302_1, uint8_t 
   * @param  data_D0_D15
   * @retval void
   */
-void Write_reg300_D0_D15 (uint32_t data_D0_D15){
+void Write_reg300_D0_D15 (uint16_t data_D0_D15){
 
 	uint32_t data_D0_D7=0, data_D8_D15=0;
 	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
@@ -221,9 +221,9 @@ uint8_t wait_interrupt_INT3(void){
 
 	while( FLAG_interrupt_INT3==0 ){
 
-		LL_IWDG_ReloadCounter(IWDG);
+		//LL_IWDG_ReloadCounter(IWDG);
 		counter++;
-		if(counter==100000){
+		if(counter==1000000){
 			return 1;
 		}
 	}
