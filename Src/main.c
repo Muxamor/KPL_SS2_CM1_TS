@@ -23,7 +23,7 @@ issued an incorrect description of the work of the exchange protocol.
 
 uint8_t FLAG_interrupt_INT3; // 1 = Command is come 
 uint8_t FLAG_interrupt_PULSE; // 1 = Pulse (global clock) is come
-uint8_t loop_counter; // counter of package 
+int16_t loop_counter; // counter of package 
 uint8_t counter_ADC_data_ready; // counter of package 
 
 int main(void){
@@ -42,15 +42,23 @@ int main(void){
 	 _REG_302 *REG302_ptr = &reg_302;
 
 	 _STATUS_CONTROL_MODULE stat_contr_mod = {
-	 										   . cm_state_start_stop = 0,
- 											   . first_adc_package = 1,
+	 										   .cm_state_start_stop = 0,
+ 											   .first_adc_package = 1,
 											 };
 
 	 _STATUS_CONTROL_MODULE *STATUS_CONT_MOD_ptr = &stat_contr_mod;
 
 	 _ANALOG_MODULE_CONF analog_mod_config[32] = {0};
 
- 	_FIFO fifo_buf, *FIFO_ADC_DATA_ptr = &fifo_buf;
+ 	_FIFO fifo_buf = {
+ 					   .FIFO_HEAD = 0,
+ 					   .FIFO_TAIL = 0,
+ 					   .COUNT_DATA_IN_FIFO = 0,
+ 					 };	
+
+ 	_FIFO *FIFO_ADC_DATA_ptr = &fifo_buf;
+
+ 	uint16_t array[4] = {0};
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
@@ -79,29 +87,48 @@ int main(void){
 			Get_Parse_ISA_command (REG302_ptr, analog_mod_config, STATUS_CONT_MOD_ptr);
 		}
 
-
+		//Sart mode, Read data ADC from analog modules and put to FIFO buffer
 		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod ==0 ){
 			FLAG_interrupt_PULSE=0;
+
+			if(counter_ADC_data_ready < 76){
+				//TODO write zero package ADC without error flag to FIFO (er)
+			}else{
+				//Read ADC data from analogs modules and put to FIFO buf. Also need check error flag in ADC package from modules. 
+			}
+
+
 
 
 		}
 
-		//Pre start mode chack status analog module
+		//Start mode, Pre-start preparation and chack status analog module
 		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 1 ){
 
 			STATUS_CONT_MOD_ptr->cm_check_status_analog_mod = 0;
 
-			//TODO Check status enabled analog module. If we have wrong status need reconfig module.
+			//TODO Check status enabled analog module. If we have wrong status need reconfig broken module.
 		
 			FIFO_ADC_DATA_ptr->FIFO_HEAD = 0;
  			FIFO_ADC_DATA_ptr->FIFO_TAIL = 0;
- 			FIFO_ADC_DATA_ptr->FIFO_COUNT_DATA = 0;
+ 			FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO = 0;
+ 			
  			counter_ADC_data_ready = 0;
-			loop_counter = 0;
+			loop_counter = -1;
+
 			INTERRUPT_PULSE_Enable(); 
 		    FLAG_interrupt_PULSE = 0; 
-		}
 
+			Enable_IO0_global_clock(); 
+
+		    //Send start command to analog module;
+		    array[0] = 0x0000;
+		    array[1] = 0x00FF;
+		    array[2] = 0x0000;
+		    array[3] = 0x0000;
+		    Data_transmite_UART_9B (array, 4,  USART1);
+		    Data_transmite_UART_9B (array, 4,  USART3);
+		}
 
 
 	}

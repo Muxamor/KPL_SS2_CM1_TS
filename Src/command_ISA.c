@@ -467,6 +467,7 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		status_control_mod-> cm_state_start_stop = 0; //Set Stop state
 		INTERRUPT_PULSE_Disable();
 		FLAG_interrupt_PULSE = 0;
+		Disable_IO0_global_clock(); 
 	}
 
 	Data_transmite_UART_9B (mass, 4,  USART1);

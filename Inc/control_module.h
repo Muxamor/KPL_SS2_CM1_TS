@@ -28,7 +28,7 @@
  	_ADC_DATA_Package FIFO_buf_ADC[FIFO_SIZE];
  	uint16_t FIFO_HEAD;
 	uint16_t FIFO_TAIL;
-	uint16_t FIFO_COUNT_DATA;
+	uint16_t COUNT_DATA_IN_FIFO;
 
  }_FIFO;
 
@@ -39,6 +39,8 @@
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
 	
  }_STATUS_CONTROL_MODULE; 
+
+ void write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
 
 
  typedef struct{

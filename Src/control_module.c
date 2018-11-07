@@ -45,6 +45,11 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	Set_RST304();
 	Reset_CLK306();
 
+	FLAG_interrupt_INT3 = 0; // 1 = Command is come 
+	FLAG_interrupt_PULSE = 0; // 1 = Pulse (global clock) is come
+	loop_counter = -1; // counter of package 
+	counter_ADC_data_ready = 0; // counter of package 
+
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
  	I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
@@ -309,5 +314,33 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr, 1, 1, 0);
 }
 
+
+void write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
+
+
+	FIFO_adc_data_ptr->FIFO_buf_ADC[FIFO_adc_data_ptr->FIFO_HEAD] = adc_package;
+
+	FIFO_adc_data_ptr->FIFO_HEAD = FIFO_adc_data_ptr->FIFO_HEAD + 1;
+
+	if(FIFO_adc_data_ptr->FIFO_HEAD == (FIFO_SIZE - 1) ){ 
+		FIFO_adc_data_ptr->FIFO_HEAD = 0;//New loop in FIFO
+	}
+
+	FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO + 1;
+
+	//check FIFO is FULL 
+	if(FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO >= FIFO_SIZE){
+		FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = FIFO_SIZE;
+		
+		
+		FIFO_adc_data_ptr->FIFO_TAIL = FIFO_adc_data_ptr->FIFO_TAIL + 1; //FIFO lost data
+		if( FIFO_adc_data_ptr->FIFO_TAIL == (FIFO_SIZE - 1) ){
+			FIFO_adc_data_ptr->FIFO_TAIL = 0; // New loop in FIFO
+		}
+
+		//TODO write to REG302 bit ERROR BUFFER;
+	}
+
+}
 
 
