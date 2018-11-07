@@ -370,12 +370,8 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	printf("mas[0]=%lu  mas[1]=%lu mas[2]=%lu mas[3]=%lu\r\n",(unsigned long) mass[0], (unsigned long) mass[1], (unsigned long) mass[2], (unsigned long) mass[3] );
-
 	Data_transmite_UART_9B(mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B(4 , USARTx);
-
-	printf("tmp=%lu \r\n ",(unsigned long)tmp);
 
 	if( tmp == 0xFFFFFFFF ){
 		if( USARTx == USART3 ){

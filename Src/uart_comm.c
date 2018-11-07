@@ -21,7 +21,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 	counter=0;
 	while( LL_USART_IsActiveFlag_TXE(USARTx) == RESET ){
 		counter++;
-		if(counter==1000000){
+		if(counter==10000000){
 			Error_Handler();
 			return ERROR;
 		}
@@ -40,7 +40,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 		counter=0;
 		while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
 			counter++;
-			if(counter==1000000){//150ms
+			if(counter==10000000){//150ms
 				Error_Handler();
 				return ERROR;
 			}
@@ -96,7 +96,7 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 
 			counter++;
 
-			if(counter==1000000){
+			if(counter==10000000){
 				LL_USART_ClearFlag_ORE(USARTx);
 				return ERROR;
 			}
