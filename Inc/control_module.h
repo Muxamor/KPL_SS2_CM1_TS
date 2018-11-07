@@ -40,7 +40,8 @@
 	
  }_STATUS_CONTROL_MODULE; 
 
- void write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
+ void Write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
+ void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr );
 
 
  typedef struct{

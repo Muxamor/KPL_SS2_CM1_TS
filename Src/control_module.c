@@ -315,7 +315,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 }
 
 
-void write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
+void Write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 
 
 	FIFO_adc_data_ptr->FIFO_buf_ADC[FIFO_adc_data_ptr->FIFO_HEAD] = adc_package;
@@ -342,5 +342,14 @@ void write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 	}
 
 }
+
+void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr ){
+
+	FIFO_adc_data_ptr->FIFO_HEAD = 0;
+	FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = 0;
+	FIFO_adc_data_ptr->FIFO_TAIL = 0; 
+
+}
+
 
 
