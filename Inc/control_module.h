@@ -40,7 +40,8 @@
 	
  }_STATUS_CONTROL_MODULE; 
 
- void Write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
+ void Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
+ _ADC_DATA_Package Read_FIFO( _FIFO  *FIFO_adc_data_ptr );
  void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr );
 
 

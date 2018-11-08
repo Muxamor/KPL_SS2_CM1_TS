@@ -315,26 +315,26 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 }
 
 
-void Write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
+
+void Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 
 
 	FIFO_adc_data_ptr->FIFO_buf_ADC[FIFO_adc_data_ptr->FIFO_HEAD] = adc_package;
 
 	FIFO_adc_data_ptr->FIFO_HEAD = FIFO_adc_data_ptr->FIFO_HEAD + 1;
 
-	if(FIFO_adc_data_ptr->FIFO_HEAD == (FIFO_SIZE - 1) ){ 
+	if( FIFO_adc_data_ptr->FIFO_HEAD == FIFO_SIZE ){ 
 		FIFO_adc_data_ptr->FIFO_HEAD = 0;//New loop in FIFO
 	}
 
 	FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO + 1;
 
-	//check FIFO is FULL 
-	if(FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO >= FIFO_SIZE){
+	//Overwrite FIFO buffer
+	if(FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE){
 		FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = FIFO_SIZE;
 		
-		
 		FIFO_adc_data_ptr->FIFO_TAIL = FIFO_adc_data_ptr->FIFO_TAIL + 1; //FIFO lost data
-		if( FIFO_adc_data_ptr->FIFO_TAIL == (FIFO_SIZE - 1) ){
+		if( FIFO_adc_data_ptr->FIFO_TAIL == FIFO_SIZE ){
 			FIFO_adc_data_ptr->FIFO_TAIL = 0; // New loop in FIFO
 		}
 
@@ -342,6 +342,33 @@ void Write_to_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 	}
 
 }
+
+
+_ADC_DATA_Package Read_FIFO( _FIFO  *FIFO_adc_data_ptr ){
+
+	_ADC_DATA_Package ret = { 
+							.head_byte = 0xFF, 
+ 							.cyclic_code = 0xFF, 
+ 							.ADC_data_byte_MSB = 0xFF,
+ 							.ADC_data_byte_LSB = 0xFF,
+	};
+
+	if( FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO != 0 ){
+
+	 	ret = FIFO_adc_data_ptr->FIFO_buf_ADC[FIFO_adc_data_ptr->FIFO_TAIL];
+
+		FIFO_adc_data_ptr->FIFO_TAIL = FIFO_adc_data_ptr->FIFO_TAIL + 1;
+
+	 	if(FIFO_adc_data_ptr->FIFO_TAIL == FIFO_SIZE ){ 
+			FIFO_adc_data_ptr->FIFO_TAIL = 0;//New loop in FIFO
+		}
+
+		FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO - 1;
+	}
+
+	return ret;
+}
+
 
 void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr ){
 

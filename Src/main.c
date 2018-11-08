@@ -58,7 +58,10 @@ int main(void){
 
  	_FIFO *FIFO_ADC_DATA_ptr = &fifo_buf;
 
+ 	_ADC_DATA_Package ADC_received_package;
+
  	uint16_t array[4] = {0};
+ 	uint8_t addr_a_mod=0; 
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
@@ -93,14 +96,34 @@ int main(void){
 
 			if(counter_ADC_data_ready < 76){
 				//TODO write zero package ADC without error flag to FIFO (er)
+
+				for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod ++ ){
+
+					if(analog_mod_config[addr_a_mod].power_module_on ==1 ){
+
+						ADC_received_package.head_byte = (addr_a_mod << 3) | 0x01;
+						ADC_received_package.cyclic_code = loop_counter;
+						ADC_received_package.ADC_data_byte_MSB = 0x00;
+						ADC_received_package.ADC_data_byte_LSB = 0x00;
+
+						Write_FIFO( FIFO_ADC_DATA_ptr, ADC_received_package );
+					}
+
+				}
 			}else{
 				//Read ADC data from analogs modules and put to FIFO buf. Also need check error flag in ADC package from modules. 
 			}
 
+		}
 
+		//Start mode. Send data to PC if we have data more than half buffer.
+
+		if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE/2 ){
 
 
 		}
+
+
 
 		//Start mode, Pre-start preparation and chack status analog module
 		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 1 ){
@@ -108,11 +131,8 @@ int main(void){
 			STATUS_CONT_MOD_ptr->cm_check_status_analog_mod = 0;
 
 			//TODO Check status enabled analog module. If we have wrong status need reconfig broken module.
-		
-			FIFO_ADC_DATA_ptr->FIFO_HEAD = 0;
- 			FIFO_ADC_DATA_ptr->FIFO_TAIL = 0;
- 			FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO = 0;
- 			
+ 			Clear_FIFO(FIFO_ADC_DATA_ptr);
+
  			counter_ADC_data_ready = 0;
 			loop_counter = -1;
 
