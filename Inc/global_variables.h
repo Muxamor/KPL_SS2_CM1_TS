@@ -11,6 +11,7 @@
  extern uint8_t FLAG_interrupt_PULSE; 
  extern int16_t loop_counter; 
  extern uint8_t counter_ADC_data_ready;
+ extern uint8_t overwrite_fifo;
 
 #ifdef __cplusplus
 }

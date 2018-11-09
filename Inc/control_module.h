@@ -37,10 +37,11 @@
  	uint8_t cm_state_start_stop; // 1=start 0=stop
  	uint8_t cm_check_status_analog_mod; //1=need check status analog modules
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
+ 	uint8_t FIFO_no_empty; // 1=if buffer half filled
 	
  }_STATUS_CONTROL_MODULE; 
 
- void Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
+ uint8_t Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package );
  _ADC_DATA_Package Read_FIFO( _FIFO  *FIFO_adc_data_ptr );
  void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr );
 

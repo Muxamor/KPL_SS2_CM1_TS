@@ -24,7 +24,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	//Answer at the 1 word command 100
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
 
 	if( wait_interrupt_INT3() ){
 		Error_Handler();
@@ -48,7 +48,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	}
 
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
 
 	if( wait_interrupt_INT3() ){
 		Error_Handler();
@@ -167,7 +167,7 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	//Answer at the 1 word command 500
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
 
 	//Get and processing second word
 	if( wait_interrupt_INT3() ){
@@ -278,7 +278,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	//Answer at the 1 word command 600
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
 
 	if( wait_interrupt_INT3() ){
 		Error_Handler();
@@ -491,7 +491,7 @@ ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	//Answer at the 1 word command A00
 	Write_reg304_D0_D15( 0x01);
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 1, 0 );
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
 
 	if( wait_interrupt_INT3() ){
 		Error_Handler();

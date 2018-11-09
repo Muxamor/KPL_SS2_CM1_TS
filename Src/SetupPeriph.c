@@ -289,6 +289,17 @@ void SetupGPIO(void){
 	/*Set_CLK306()   				   */
 	/*Reset_CLK306()   				   */
 	/*Pulse_CLK306()   				   */
+
+
+	/* Configure INT2(PB1)               */
+	GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+	GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/*For read INT2   need use  */
+	/*Read_INT2()  				   */
+
 }
 
 

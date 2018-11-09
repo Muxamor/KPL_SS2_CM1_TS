@@ -33,6 +33,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx.h"
 #include "stm32l4xx_it.h"
+#include "SetupPeriph.h"
 
 #include "global_variables.h"
 
@@ -212,6 +213,11 @@ void EXTI9_5_IRQHandler(void){
 
       if( loop_counter >= 254 ){
         loop_counter = 0;
+
+        if(overwrite_fifo == 1 ){
+        	Pulse_CLK306();
+        }
+
       }else{
         loop_counter++; 
       } 

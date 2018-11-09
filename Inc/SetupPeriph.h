@@ -150,7 +150,12 @@ void IWDG_Init(void);
                                 __NOP();\
                                 __NOP();\
                                 LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);\
-                              }                              
+                              }
+
+
+
+#define Read_pin_INT2() 	  LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_1)
+
 
 /*For enable/desible interrupt INT3 need use:   */
 #define INT3_Enable()         LL_EXTI_EnableIT_0_31(LL_EXTI_LINE_2)             

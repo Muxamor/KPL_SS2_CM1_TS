@@ -98,6 +98,13 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 
 			if(counter==10000000){
 				LL_USART_ClearFlag_ORE(USARTx);
+				for(i=0; i<size_rec_data; i++){
+					if(i==0){
+						receive_data[i] = receive_data[i] & 0xFE;
+					}else{
+						receive_data[i] = 0xFF;
+					}
+				}
 				return ERROR;
 			}
 		}

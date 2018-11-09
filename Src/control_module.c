@@ -49,6 +49,7 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	FLAG_interrupt_PULSE = 0; // 1 = Pulse (global clock) is come
 	loop_counter = -1; // counter of package 
 	counter_ADC_data_ready = 0; // counter of package 
+	overwrite_fifo = 0; //1 =overwrite fifo flag
 
 	//Default setup board and cross borad Address IC = 0x20, cross board.
 	//Address IC TCA9554 = 0x20
@@ -311,12 +312,11 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 	}
 
 	reg302_ptr->reg_304_ready_get_command = 1;
-	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr, 1, 1, 0);
+	Write_reg302_D0_D7 (*(uint32_t*)reg302_ptr, 1, 0, 0);
 }
 
 
-
-void Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
+uint8_t Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 
 
 	FIFO_adc_data_ptr->FIFO_buf_ADC[FIFO_adc_data_ptr->FIFO_HEAD] = adc_package;
@@ -338,9 +338,10 @@ void Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 			FIFO_adc_data_ptr->FIFO_TAIL = 0; // New loop in FIFO
 		}
 
-		//TODO write to REG302 bit ERROR BUFFER;
+		return 1;  // Error was overwrite buffer
 	}
 
+	return 0;
 }
 
 
@@ -377,6 +378,36 @@ void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr ){
 	FIFO_adc_data_ptr->FIFO_TAIL = 0; 
 
 }
+
+
+/*
+
+void Write_zerro_stub_ADC_data(_ANALOG_MODULE_CONF a_mod_config[], uint8_t set_error, _FIFO *FIFO_ADC_DATA_ptr){
+
+	uint8_t  addr_a_mod = 0;
+	_ADC_DATA_Package ADC_received_package;
+
+	for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod ++ ){
+
+		if(a_mod_config[addr_a_mod].power_module_on ==1 ){
+
+			if(set_error == 0 ){ //No set Error
+				ADC_received_package.head_byte = (addr_a_mod << 3) | 0x01;
+			}else{//Set Error status
+				ADC_received_package.head_byte = addr_a_mod << 3;
+			}
+
+			ADC_received_package.cyclic_code = loop_counter;
+			ADC_received_package.ADC_data_byte_MSB = 0x00;
+			ADC_received_package.ADC_data_byte_LSB = 0x00;
+
+			Write_FIFO( FIFO_ADC_DATA_ptr, ADC_received_package );
+		}
+	}
+} */
+
+
+
 
 
 
