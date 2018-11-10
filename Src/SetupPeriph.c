@@ -171,7 +171,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull =LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8);
@@ -186,7 +186,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);
@@ -201,7 +201,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);
@@ -217,7 +217,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12);
@@ -233,7 +233,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);
@@ -249,7 +249,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_8);
@@ -264,7 +264,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 	LL_GPIO_Init(GPIOH, &GPIO_InitStruct);
 
 	LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);
@@ -280,11 +280,10 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH ;
 	GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-	GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+	GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
 	LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);
-
 	/*For set/reset CLK306   need use  */
 	/*Set_CLK306()   				   */
 	/*Reset_CLK306()   				   */

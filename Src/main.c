@@ -151,7 +151,7 @@ int main(void){
 						}
 					}
 
-					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE/2 ){
+					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE/8 ){
 						STATUS_CONT_MOD_ptr->FIFO_no_empty = 1;
 						REG302_ptr->buffer_empty = 0; //No Empty
 						Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 1, 0);
@@ -169,6 +169,7 @@ int main(void){
 			if( Read_pin_INT2() == 1 || STATUS_CONT_MOD_ptr->first_adc_package == 1 ){
 
 				STATUS_CONT_MOD_ptr->first_adc_package = 0;
+
 				ADC_data_package = Read_FIFO( FIFO_ADC_DATA_ptr );
 
 				 data_D0_D15 = (ADC_data_package.head_byte << 8) | ADC_data_package.cyclic_code;
