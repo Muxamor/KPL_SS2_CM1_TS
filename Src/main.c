@@ -101,7 +101,6 @@ int main(void){
 			FLAG_interrupt_PULSE = 0;
 
 			if(counter_ADC_data_ready < 76){
-				//TODO write zero package ADC without error flag to FIFO (er)
 
 				for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod ++ ){
 
@@ -142,7 +141,6 @@ int main(void){
 
 						if(ret == 1){ // Overwrite FIFO
 							overwrite_fifo = 1;
-							//Need discuss of Alexander!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							REG302_ptr-> buffer_error = 1; //buffer overwrite
 							Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 0, 1);
 							REG302_ptr-> buffer_error = 0;
@@ -151,7 +149,7 @@ int main(void){
 						}
 					}
 
-					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE/8 ){
+					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO > FIFO_SIZE/8 ){ //Edge to set flg FIFO no empty
 						STATUS_CONT_MOD_ptr->FIFO_no_empty = 1;
 						REG302_ptr->buffer_empty = 0; //No Empty
 						Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 1, 0);
@@ -221,26 +219,5 @@ int main(void){
 }
 
  
-
-/*//Only FOR TESTE!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x03, 0x00); // Set pin as output, Address IC = 0x20
-	//I2C_write_reg_TCA9554(I2C1 , 0x20, 0x01, 0x00); // OFF all analog module in block, Address IC = 0x20
-
-	LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
-	uint16_t massiv[4];
-
-//while(1){
-	LL_mDelay(40000);
-	massiv[0] = 0x0000;
-	massiv[1] = 0x00FF;
-	massiv[2] = 0x00BB;
-	massiv[3] = 0x00CC;
-
-	Data_transmite_UART_9B (massiv, USART1);
-//}
-	while(1);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 

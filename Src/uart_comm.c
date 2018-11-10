@@ -18,11 +18,9 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 
 	uint32_t counter=0;
 
-	//For Test only
-
 	if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
-			LL_USART_ClearFlag_ORE(USARTx);
-		}
+		LL_USART_ClearFlag_ORE(USARTx);
+	}
 
 	if(LL_USART_IsActiveFlag_RXNE(USARTx) == 1){
 		LL_USART_ReceiveData9(USARTx);
@@ -107,7 +105,7 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 
 			counter++;
 
-			if(counter==10000000){
+			if(counter==1000000){
 				LL_USART_ClearFlag_ORE(USARTx);
 				for(i=0; i<size_rec_data; i++){
 					if(i==0){

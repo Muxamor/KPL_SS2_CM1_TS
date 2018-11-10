@@ -386,31 +386,6 @@ void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr ){
 }
 
 
-/*
-
-void Write_zerro_stub_ADC_data(_ANALOG_MODULE_CONF a_mod_config[], uint8_t set_error, _FIFO *FIFO_ADC_DATA_ptr){
-
-	uint8_t  addr_a_mod = 0;
-	_ADC_DATA_Package ADC_received_package;
-
-	for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod ++ ){
-
-		if(a_mod_config[addr_a_mod].power_module_on ==1 ){
-
-			if(set_error == 0 ){ //No set Error
-				ADC_received_package.head_byte = (addr_a_mod << 3) | 0x01;
-			}else{//Set Error status
-				ADC_received_package.head_byte = addr_a_mod << 3;
-			}
-
-			ADC_received_package.cyclic_code = loop_counter;
-			ADC_received_package.ADC_data_byte_MSB = 0x00;
-			ADC_received_package.ADC_data_byte_LSB = 0x00;
-
-			Write_FIFO( FIFO_ADC_DATA_ptr, ADC_received_package );
-		}
-	}
-} */
 
 
 

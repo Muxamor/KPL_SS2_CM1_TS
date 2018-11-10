@@ -113,6 +113,7 @@ void SystemClock_Config(void){
 
   /* Setup clock source for USART1 and I2C */
 	LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_SYSCLK);
+	LL_RCC_SetUSARTClockSource(LL_RCC_USART3_CLKSOURCE_SYSCLK);
 	LL_RCC_SetI2CClockSource(LL_RCC_I2C1_CLKSOURCE_SYSCLK);
 
 	/* SysTick_IRQn interrupt configuration */
@@ -391,9 +392,9 @@ void USART1_Init(void){
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     /**/
     //RE -Enable when low
-    //TE - Enbale when high
-    LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_11); //Enable receive data
-    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12); //Enable transmit data
+    //TE - Disable when high
+    LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_11);   //Enable transmit data
+    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12); //Enable receive data
 }
 
 
