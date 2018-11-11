@@ -16,7 +16,7 @@
 ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mod_config[] ){
 
 	uint16_t word2_D0_D15 = 0, word3_D0_D15 = 0;
-	uint8_t  i=0;
+	uint8_t  i=0,j=0;
 	ErrorStatus ret1, ret2;
 	uint16_t mass[4];
 	uint32_t tmp=0;
@@ -73,8 +73,9 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		Write_reg304_D0_D15( 0x01);
 	}
 
-	for(i=16; i<32; i++){ //Save setting analog module
-		analog_mod_config[i].power_module_on = (uint8_t)(( word3_D0_D15 >> i ) & 0x0001);
+	for(i=16, j=0; i<32; i++){ //Save setting analog module
+		analog_mod_config[i].power_module_on = (uint8_t)(( word3_D0_D15 >>j ) & 0x0001);
+		j++;
 	}
 
 	return SUCCESS; 
@@ -462,20 +463,40 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		//INTERRUPT_PULSE_Enable();
 		//FLAG_interrupt_PULSE = 0;
 
+		Write_reg304_D0_D15(0x01);
+
 	}else{ // Stop mode
 		mass[1] = 0x0000;
 		status_control_mod-> cm_state_start_stop = 0; //Set Stop state
 		INTERRUPT_PULSE_Disable();
 		FLAG_interrupt_PULSE = 0;
 		Disable_IO0_global_clock(); 
+
+		//PULSE_RESET_reg302_b1_b2(); //Not working
+
 		reg302_ptr->buffer_empty = 1;
 		Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 0, 1, 0 );
+
+		// PC sent command Stop twice (We don't know what it this)
+		Write_reg304_D0_D15( 0x01);
+
+		reg302_ptr->reg_304_ready_get_command = 1;
+		Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
+
+		if( wait_interrupt_INT3() ){
+			Error_Handler(); //No had second stop
+			//return ERROR;
+		}else{
+			Read_reg304_D0_D15();
+		}
+
+
 	}
+
+	//Write_reg304_D0_D15(0x01);
 
 	Data_transmite_UART_9B (mass, 4,  USART1);
 	Data_transmite_UART_9B (mass, 4,  USART3);
-
-	Write_reg304_D0_D15(0x01);
 
 	return SUCCESS; 
 }

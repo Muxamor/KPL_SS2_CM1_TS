@@ -157,10 +157,11 @@ void Write_reg304_D0_D15( uint16_t data_D0_D15 ){
 	data_D0_D7 = data_D0_D15 & 0x000000FF;
 	invert_data_D0_D7 = ( ~ data_D0_D7 ) & 0x000000FF;
 	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits
-	
+
 	data_D8_D15 =  (data_D0_D15 >> 8 ) & 0x000000FF;
 	invert_data_D8_D15 = ( ~ data_D8_D15 ) & 0x000000FF;
 	WRITE_REG(GPIOC->BSRR,  ( ( invert_data_D8_D15 << 16 ) | data_D8_D15) ); //Set bits. Maybe use BRR register to reset bits 
+	__NOP();
 
 	Pulse_CLK304();
 }
@@ -184,6 +185,7 @@ void Write_reg302_D0_D7 ( uint16_t data_reg302, uint8_t write_CLK302_1, uint8_t 
 	data_D0_D7 = data_reg302 & 0x000000FF;
 	invert_data_D0_D7 = ( ~ data_D0_D7 ) & 0x000000FF;
 	WRITE_REG(GPIOA->BSRR,  ( ( invert_data_D0_D7 << 16 ) | data_D0_D7) ); //Set bits.  Maybe use BRR register to reset bits
+	__NOP();
 	
 	if (write_CLK302_1 == 1 ){
 		Pulse_CLK302_1();
@@ -223,6 +225,7 @@ void Write_reg300_D0_D15 (uint16_t data_D0_D15){
 	data_D8_D15 =  (data_D0_D15 >> 8 ) & 0x000000FF;
 	invert_data_D8_D15 = ( ~ data_D8_D15 ) & 0x000000FF;
 	WRITE_REG(GPIOC->BSRR,  ( ( invert_data_D8_D15 << 16 ) | data_D8_D15) ); //Set bits. Maybe use BRR register to reset bits
+	__NOP();
 
 	Pulse_CLK300();
 }

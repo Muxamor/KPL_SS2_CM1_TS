@@ -68,7 +68,6 @@ void IWDG_Init(void);
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_8);\
 								__NOP();\
 								__NOP();\
-								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_8);\
 							  }
 
@@ -78,7 +77,6 @@ void IWDG_Init(void);
 
 #define Pulse_CLK302_1()      {\
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_10);\
-								__NOP();\
 								__NOP();\
 								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);\
@@ -92,7 +90,6 @@ void IWDG_Init(void);
 								                LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_11);\
 								                __NOP();\
 								                __NOP();\
-								                __NOP();\
 								                LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);\
 							                }
 
@@ -102,7 +99,6 @@ void IWDG_Init(void);
 
 #define Pulse_CLK302_3()      {\
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_12);\
-								__NOP();\
 								__NOP();\
 								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12);\
@@ -119,7 +115,6 @@ void IWDG_Init(void);
 								LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_9);\
 								__NOP();\
 								__NOP();\
-								__NOP();\
 								LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);\
 							  }
                           
@@ -133,12 +128,11 @@ void IWDG_Init(void);
 #define Reset_RST304()        LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1)
 
 #define Pulse_RST304()        {\
-								                LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1);\
-								                __NOP();\
-								                __NOP();\
-								                __NOP();\
-								                LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);\
-							                }
+								LL_GPIO_ResetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+								__NOP();\
+								__NOP();\
+								LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);\
+							  }
 
 /*For set/reset CLK306 need use                 */
 #define Set_CLK306()          LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2)
@@ -148,13 +142,20 @@ void IWDG_Init(void);
                                 LL_GPIO_SetOutputPin(GPIOD, LL_GPIO_PIN_2);\
                                 __NOP();\
                                 __NOP();\
-                                __NOP();\
                                 LL_GPIO_ResetOutputPin(GPIOD, LL_GPIO_PIN_2);\
                               }
 
 
 
 #define Read_pin_INT2() 	  LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_1)
+
+/*For Reset Bit1 and Bit2 need use:   */
+#define PULSE_RESET_reg302_b1_b2()		{\
+        									LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_0);\
+        									__NOP();\
+        									__NOP();\
+        									LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_0);\
+      	  	  	  	  	  	  	  	  	}
 
 
 /*For enable/desible interrupt INT3 need use:   */
