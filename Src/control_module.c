@@ -125,6 +125,12 @@ uint32_t Read_reg304_D0_D15( void ){
 	data_D0_D15 = data_D0_D15 & 0x0000FFFF; //clear MSB 
 
 	Pulse_RST304();
+	__NOP();
+
+	Set_EN304();
+
+	Set_Output_mode_D0_D15();
+	__NOP();
 
 	return data_D0_D15;
 }
@@ -141,10 +147,10 @@ void Write_reg304_D0_D15( uint16_t data_D0_D15 ){
 	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
 
 	//Change diraction ISA bus
-	Set_EN304();
+	//Set_EN304();
 
-	Set_Output_mode_D0_D15();
-	__NOP();
+	//Set_Output_mode_D0_D15();
+	//__NOP();
 
 	//write bite to PA0..PA7 
 
@@ -169,10 +175,10 @@ void Write_reg302_D0_D7 ( uint16_t data_reg302, uint8_t write_CLK302_1, uint8_t 
 	uint32_t invert_data_D0_D7=0, data_D0_D7=0;
 
 	//Change diraction ISA bus
-	Set_EN304();
+	//Set_EN304();
 
-	Set_Output_mode_D0_D15();
-	__NOP();
+	//Set_Output_mode_D0_D15();
+	//__NOP();
 
 	//write bite to PA0..PA7 
 	data_D0_D7 = data_reg302 & 0x000000FF;
@@ -204,10 +210,10 @@ void Write_reg300_D0_D15 (uint16_t data_D0_D15){
 	uint32_t invert_data_D0_D7=0, invert_data_D8_D15=0;
 
 	//Change diraction ISA bus
-	Set_EN304();
+	//Set_EN304();
 
-	Set_Output_mode_D0_D15();
-	__NOP();
+	//Set_Output_mode_D0_D15();
+	//__NOP();
 
 	//write bite to PA0..PA7
 	data_D0_D7 = data_D0_D15 & 0x000000FF;
@@ -266,7 +272,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 
 	if( stat_cont_mod->cm_state_start_stop == 1 && number_command == 9 ){ // Start mode
 
-		 ISA_Command_900( word1_D0_D15, stat_cont_mod );
+		 ISA_Command_900( word1_D0_D15, stat_cont_mod, reg302_ptr );
 	}else if( stat_cont_mod->cm_state_start_stop == 0 ){ // Stop mode
 
 		switch(number_command){
@@ -300,7 +306,7 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 				break;
 
 			case 0x09: 
-				ISA_Command_900(word1_D0_D15, stat_cont_mod);
+				ISA_Command_900(word1_D0_D15, stat_cont_mod, reg302_ptr);
 				break;
 
 			case 0x0A:

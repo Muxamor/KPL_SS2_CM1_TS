@@ -170,11 +170,11 @@ int main(void){
 
 				ADC_data_package = Read_FIFO( FIFO_ADC_DATA_ptr );
 
-				 data_D0_D15 = (ADC_data_package.head_byte << 8) | ADC_data_package.cyclic_code;
-				 Write_reg304_D0_D15( data_D0_D15 );
+				data_D0_D15 = (ADC_data_package.head_byte << 8) | ADC_data_package.cyclic_code;
+				Write_reg304_D0_D15( data_D0_D15 );
 
-				 data_D0_D15 = (ADC_data_package.ADC_data_byte_MSB << 8) | ADC_data_package.ADC_data_byte_LSB;
-				 Write_reg300_D0_D15( data_D0_D15 );
+				data_D0_D15 = (ADC_data_package.ADC_data_byte_MSB << 8) | ADC_data_package.ADC_data_byte_LSB;
+				Write_reg300_D0_D15( data_D0_D15 );
 			}
 
 			if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO == 0){

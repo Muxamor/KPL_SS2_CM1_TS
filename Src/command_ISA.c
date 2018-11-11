@@ -442,7 +442,7 @@ void ISA_Command_800( void ){
 	while(1); // Wait watch dog
 }
 
-ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *status_control_mod ){
+ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *status_control_mod, _REG_302 *reg302_ptr ){
 
 	uint8_t state_control_module = 0;
 	uint16_t mass[4];
@@ -468,6 +468,8 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		INTERRUPT_PULSE_Disable();
 		FLAG_interrupt_PULSE = 0;
 		Disable_IO0_global_clock(); 
+		reg302_ptr->buffer_empty = 1;
+		Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 0, 1, 0 );
 	}
 
 	Data_transmite_UART_9B (mass, 4,  USART1);
