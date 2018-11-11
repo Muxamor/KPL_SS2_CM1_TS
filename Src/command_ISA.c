@@ -73,9 +73,8 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		Write_reg304_D0_D15( 0x01);
 	}
 
-	for(i=16, j=0; i<32; i++){ //Save setting analog module
-		analog_mod_config[i].power_module_on = (uint8_t)(( word3_D0_D15 >>j ) & 0x0001);
-		j++;
+	for(i=16, j=0; i < 32; i++, j++ ){ //Save setting analog module
+		analog_mod_config[i].power_module_on = (uint8_t)(( word3_D0_D15 >> j ) & 0x0001);
 	}
 
 	return SUCCESS; 
@@ -95,8 +94,8 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	mass[1] = 0x0000;
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
-	Data_transmite_UART_9B (mass , 4,  USART3);
-	tmp = Data_receive_UART_9B (4 , USART3);
+	Data_transmite_UART_9B (mass, 4,  USART3);
+	tmp = Data_receive_UART_9B (4, USART3);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01 ){
 		reg302_ptr->block2_ready = 0;
@@ -119,14 +118,14 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	uint16_t mass[4];
 	uint32_t tmp=0;
 
-	USART_TypeDef *USARTx;
+	USART_TypeDef *USARTn;
 	
 	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod <= 15){
-		USARTx = USART1;
+	if(addr_analog_mod < 16){
+		USARTn = USART1;
 	}else{
-		USARTx = USART3;
+		USARTn = USART3;
 	}
 
 	mass[0] = (word1_D0_D15 & 0x00F8) | 0x0002; // Set K1 command
@@ -134,18 +133,18 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	Data_transmite_UART_9B (mass , 4,  USARTx);
-	tmp = Data_receive_UART_9B (4 , USARTx);
+	Data_transmite_UART_9B (mass , 4,  USARTn);
+	tmp = Data_receive_UART_9B (4 , USARTn);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
-		if( USARTx == USART3 ){
+		if( USARTn == USART3 ){
 			reg302_ptr->block2_ready = 0;
 		}
 		analog_mod_config[addr_analog_mod].amp_factor_K1 = 0x00;
 		Write_reg304_D0_D15(0x02);
 
 	}else{
-		if( USARTx == USART3 ){
+		if( USARTn == USART3 ){
 			reg302_ptr->block2_ready = 1;
 		}
 		analog_mod_config[addr_analog_mod].amp_factor_K1 = (uint8_t)(word1_D0_D15 & 0x0003);
@@ -180,7 +179,7 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 
 	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod <= 15){
+	if(addr_analog_mod < 16){
 		USARTx = USART1;
 	}else{
 		USARTx = USART3;
@@ -289,7 +288,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
 	addr_analog_mod =  ((uint8_t)word1_D0_D15) >> 3;
 
-	if(addr_analog_mod <= 15){
+	if(addr_analog_mod < 16){
 		USARTx = USART1;
 	}else{
 		USARTx = USART3;
@@ -338,7 +337,7 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	addr_analog_mod = ((uint8_t)word1_D0_D15) >> 3;
 	number_request = ((uint8_t)word1_D0_D15) & 0x07;
 
-	if(addr_analog_mod <= 15){
+	if(addr_analog_mod < 16){
 		USARTx = USART1;
 	}else{
 		USARTx = USART3;
@@ -454,7 +453,7 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	if(state_control_module == 0x01){//Start mode
+	if(state_control_module == 0x01){ //Start mode
 		mass[1] = 0x00FF;
 		status_control_mod->cm_state_start_stop = 1; //Set Start 
 		status_control_mod->cm_check_status_analog_mod = 1; 
@@ -463,37 +462,27 @@ ErrorStatus ISA_Command_900( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *stat
 		//INTERRUPT_PULSE_Enable();
 		//FLAG_interrupt_PULSE = 0;
 
-		Write_reg304_D0_D15(0x01);
+	}else{ //Stop mode
 
-	}else{ // Stop mode
-		mass[1] = 0x0000;
-		status_control_mod-> cm_state_start_stop = 0; //Set Stop state
-		INTERRUPT_PULSE_Disable();
-		FLAG_interrupt_PULSE = 0;
-		Disable_IO0_global_clock(); 
+		if(status_control_mod->cm_state_start_stop == 1){
+			mass[1] = 0x0000;
+			status_control_mod-> cm_state_start_stop = 0; //Set Stop state
+			INTERRUPT_PULSE_Disable();
+			FLAG_interrupt_PULSE = 0;
 
-		//PULSE_RESET_reg302_b1_b2(); //Not working
+			Disable_IO0_global_clock(); 
 
-		reg302_ptr->buffer_empty = 1;
-		Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 0, 1, 0 );
+			reg302_ptr->buffer_empty = 1; // !!!!Not sure that it need
+			Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 0, 1, 0 );// !!!!Not sure that it need
 
-		// PC sent command Stop twice (We don't know what it this)
-		Write_reg304_D0_D15( 0x01);
+		}else{ // It mean we got second Stop command (We don't know why it happen )
 
-		reg302_ptr->reg_304_ready_get_command = 1;
-		Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
-
-		if( wait_interrupt_INT3() ){
-			Error_Handler(); //No had second stop
-			//return ERROR;
-		}else{
-			Read_reg304_D0_D15();
+			/*empty*/
+			return SUCCESS; 
 		}
-
-
 	}
 
-	//Write_reg304_D0_D15(0x01);
+	Write_reg304_D0_D15(0x01);
 
 	Data_transmite_UART_9B (mass, 4,  USART1);
 	Data_transmite_UART_9B (mass, 4,  USART3);
@@ -536,6 +525,7 @@ ErrorStatus ISA_Command_A00( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 
 	return SUCCESS; 
 }
+
 
 ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15 ){
 

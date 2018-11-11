@@ -64,7 +64,7 @@ int main(void){
 
  	uint16_t array_u16[4] = {0};
  	uint8_t array_u8[4] = {0};
- 	USART_TypeDef *USARTx;
+ 	USART_TypeDef *USARTxx;
  	uint8_t addr_a_mod = 0;
  	uint8_t ret = 0;
  	uint16_t data_D0_D15;
@@ -96,17 +96,19 @@ int main(void){
 			Get_Parse_ISA_command(REG302_ptr, analog_mod_config, STATUS_CONT_MOD_ptr);
 		}
 
+
+
 		//Sart mode, Read data ADC from analog modules and put to FIFO buffer
 		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 0 ){
 			FLAG_interrupt_PULSE = 0;
 
 			if(counter_ADC_data_ready < 76){
 
-				for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod ++ ){
+				for( addr_a_mod = 0; addr_a_mod < 32; addr_a_mod++ ){
 
 					if(analog_mod_config[addr_a_mod].power_module_on == 1 ){
 
-						ADC_data_package.head_byte = (addr_a_mod << 3) | 0x01;
+						ADC_data_package.head_byte = ( (addr_a_mod << 3) | 0x01 );
 						ADC_data_package.cyclic_code = loop_counter;
 						ADC_data_package.ADC_data_byte_MSB = 0x00;
 						ADC_data_package.ADC_data_byte_LSB = 0x00;
@@ -116,20 +118,20 @@ int main(void){
 				}
 			}else{
 				//Read ADC data from analogs modules and put to FIFO buf. Also need check error flag in ADC package from modules. 
-				for( addr_a_mod = 0 ; addr_a_mod < 32 ; addr_a_mod++ ){
+				for( addr_a_mod = 0; addr_a_mod < 32; addr_a_mod++ ){
 
-					if(analog_mod_config[addr_a_mod].power_module_on ==1 ){
+					if(analog_mod_config[addr_a_mod].power_module_on == 1 ){
 
 						array_u16[0] = (addr_a_mod<<3) | 0x01;
 
-						if(addr_a_mod <= 15){
-							USARTx = USART1;
+						if(addr_a_mod < 16){
+							USARTxx = USART1;
 						}else{
-							USARTx = USART3;
+							USARTxx = USART3;
 						}
 
-						Data_transmite_UART_9B(array_u16 , 1,  USARTx);
-						ADC_data_receive_UART(array_u8, 4, USARTx);
+						Data_transmite_UART_9B(array_u16 , 1,  USARTxx);
+						ADC_data_receive_UART(array_u8, 4, USARTxx);
 
 						//TODO Check error flag. If lost synchronization need restart ADC.
 						ADC_data_package.head_byte = array_u8[0];
@@ -151,7 +153,7 @@ int main(void){
 
 					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO >= 520){  /*FIFO_SIZE/64*/  //Edge to set flg FIFO no empty
 						STATUS_CONT_MOD_ptr->FIFO_no_empty = 1;
-						REG302_ptr->buffer_empty = 0; //No Empty
+						REG302_ptr->buffer_empty = 0; //Buffer NO Empty
 						Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 1, 0);
 					}
 
@@ -159,6 +161,7 @@ int main(void){
 			}
 
 		}
+
 
 
 		//Start mode. Send data to ISA if we have data more than half buffer.
@@ -179,11 +182,13 @@ int main(void){
 
 			if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO == 0){
 				STATUS_CONT_MOD_ptr->FIFO_no_empty = 0;
-				REG302_ptr->buffer_empty = 1; //No Empty
+				REG302_ptr->buffer_empty = 1; //Buffer Empty
 				Write_reg302_D0_D7( *(uint32_t*)REG302_ptr, 0, 1, 0 );
 			}
 
 		}
+
+
 
 		//Start mode, Pre-start preparation and check status analog module
 		if( STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 1 ){

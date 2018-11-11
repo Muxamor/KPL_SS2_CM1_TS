@@ -81,7 +81,7 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	////////////////////////////////////////
 
 	//Check that  Block 2 is present
-	uint16_t mass[4] = {0x06,0x00,0x00,0x00};
+	uint16_t mass[4] = {0x0006,0x0000,0x0000,0x0000};
 	uint32_t tmp = 0;
 
 	Data_transmite_UART_9B (mass, 4,  USART3);
@@ -128,9 +128,10 @@ uint32_t Read_reg304_D0_D15( void ){
 	__NOP();
 
 	Set_EN304();
+	__NOP();
 
 	Set_Output_mode_D0_D15();
-	__NOP();
+	
 
 	return data_D0_D15;
 }
@@ -195,7 +196,7 @@ void Write_reg302_D0_D7 ( uint16_t data_reg302, uint8_t write_CLK302_1, uint8_t 
 		Pulse_CLK302_2();
 	}
 
-	if( write_CLK302_3){
+	if( write_CLK302_3 == 1 ){
 		Pulse_CLK302_3();
 	}
 }

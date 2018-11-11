@@ -17,6 +17,7 @@
 ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
+	uint8_t i=0;
 
 	if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
 		LL_USART_ClearFlag_ORE(USARTx);
@@ -30,15 +31,15 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 	counter=0;
 	while( LL_USART_IsActiveFlag_TXE(USARTx) == RESET ){
 		counter++;
-		if(counter==100000){
+		if( counter == 100000 ){
 			Error_Handler();
 			return ERROR;
 		}
 	}
 
-	for ( uint8_t i=0 ; i<size_parcel; i++ ){
+	for ( i=0 ; i < size_parcel; i++ ){
 
-		if (i==0){
+		if ( i == 0 ){
 			LL_USART_TransmitData9( USARTx, 0x100 | mass[i] );//set 9 bit for command (first) bite 
 
 		}else{
@@ -49,7 +50,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 		counter=0;
 		while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
 			counter++;
-			if(counter==100000){//150ms
+			if( counter == 100000 ){//150ms
 				Error_Handler();
 				return ERROR;
 			}
@@ -98,15 +99,16 @@ uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
 ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data , USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
+	uint8_t i=0;
 	
-	for(uint8_t i=0; i<size_rec_data; i++ ){
+	for( i=0; i < size_rec_data; i++ ){
 		counter=0;
 		while( LL_USART_IsActiveFlag_RXNE(USARTx) == RESET ){
 
 			counter++;
 
 			if(counter==100000){
-				LL_USART_ClearFlag_ORE(USARTx);
+				
 				for(i=0; i<size_rec_data; i++){
 					if(i==0){
 						receive_data[i] = receive_data[i] & 0xFE;
@@ -114,6 +116,7 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 						receive_data[i] = 0xFF;
 					}
 				}
+				LL_USART_ClearFlag_ORE(USARTx);
 				return ERROR;
 			}
 		}
