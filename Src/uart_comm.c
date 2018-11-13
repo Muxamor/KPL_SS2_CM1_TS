@@ -14,7 +14,7 @@
 #include  <stdio.h>
 
 
-ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART_TypeDef *USARTx){
+ErrorStatus Data_transmite_UART_9B(uint16_t mass[], uint8_t size_parcel,  USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
 	uint8_t i=0;
@@ -58,6 +58,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 	}
 
 	//For Debug
+	/*
 	counter=0;
 	while( LL_USART_IsActiveFlag_TC( USARTx ) == RESET ){
 		counter++;
@@ -65,7 +66,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
 			Error_Handler();
 			return ERROR;
 		}
-	}
+	} */
 
 	return SUCCESS;
 }
@@ -76,7 +77,7 @@ ErrorStatus Data_transmite_UART_9B (uint16_t mass[], uint8_t size_parcel,  USART
   * @param  void
   * @retval head byte put MSB
   */
-uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
+uint32_t Data_receive_UART_9B(uint8_t size_rec_data , USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
 	uint8_t receive_data[4]= {0};
@@ -123,7 +124,7 @@ uint32_t Data_receive_UART_9B (uint8_t size_rec_data , USART_TypeDef *USARTx){
   * @param  void
   * @retval 0 or 1 ,  1 = return error 
   */
-ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data , USART_TypeDef *USARTx){
+ErrorStatus ADC_data_receive_UART(uint8_t receive_data[], uint8_t size_rec_data , USART_TypeDef *USARTx){
 
 	uint32_t counter=0;
 	uint16_t head_rec_byte=0x0000;
@@ -161,6 +162,46 @@ ErrorStatus ADC_data_receive_UART (uint8_t receive_data[], uint8_t size_rec_data
 
 	return SUCCESS;
 }
+
+
+uint32_t Transfer_command_UART_9B(uint16_t tx_mass[], uint8_t size_tx_data, uint8_t size_rx_data,  USART_TypeDef *USARTx){
+
+	ErrorStatus ret_tx;
+	uint32_t ret_rx = 0;
+	uint8_t i = 0;
+
+    do{ // Two attempt to transfer command 
+    	ret_tx = Data_transmite_UART_9B (tx_mass, size_tx_data, USARTx);
+
+    	if(ret_tx == SUCCESS){
+			ret_rx = Data_receive_UART_9B (size_rx_data , USARTx);
+		}
+
+		if(ret_tx == ERROR || ret_rx == 0xFFFFFFFF){
+			i++;
+		}
+
+    }while( i != 2 || ret_rx != 0xFFFFFFFF); 
+	
+	if( i == 2 || ret_rx == 0xFFFFFFFF){
+		return 0xFFFFFFFF;
+	}else{
+		return ret_rx;
+	}
+
+}
+
+/*
+
+uint32_t Transfer_ADC_data_UART_9B (uint16_t tx_mass[], uint8_t size_tx_data, uint8_t size_rx_data,  USART_TypeDef *USARTx){
+
+	ErrorStatus ret_tx;
+	uint32_t ret_rx = 0;
+	uint8_t i = 0;
+
+    ????
+
+}*/
 
 
 

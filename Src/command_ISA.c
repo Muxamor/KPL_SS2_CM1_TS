@@ -61,6 +61,8 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	mass[1] = 0x0000;
 	mass[2] = (word3_D0_D15>>8) & 0x00FF;
 	mass[3] = word3_D0_D15 & 0x00FF;
+
+	//tmp = Transfer_command_UART_9B ( mass, 4, 4, USART3);
 	Data_transmite_UART_9B ( mass , 4,  USART3);
 	tmp = Data_receive_UART_9B (4 , USART3);
 

@@ -133,6 +133,8 @@ int main(void){
 						Data_transmite_UART_9B(array_u16 , 1,  USARTxx);
 						ADC_data_receive_UART(array_u8, 4, USARTxx);
 
+						//TODO check answer, right address  
+
 						//TODO Check error flag. If lost synchronization need restart ADC.
 						ADC_data_package.head_byte = array_u8[0];
 						ADC_data_package.cyclic_code = loop_counter;
@@ -151,7 +153,7 @@ int main(void){
 						}
 					}
 
-					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO >= 32){  /*FIFO_SIZE/64*/  //Edge to set flg FIFO no empty
+					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO >= 32){//Edge to set flg FIFO no empty   /*FIFO_SIZE/64*/  
 						STATUS_CONT_MOD_ptr->FIFO_no_empty = 1;
 						REG302_ptr->buffer_empty = 0; //Buffer NO Empty
 						Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 1, 0);
