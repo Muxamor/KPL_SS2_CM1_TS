@@ -151,7 +151,7 @@ int main(void){
 						}
 					}
 
-					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO >= 520){  /*FIFO_SIZE/64*/  //Edge to set flg FIFO no empty
+					if( FIFO_ADC_DATA_ptr->COUNT_DATA_IN_FIFO >= 32){  /*FIFO_SIZE/64*/  //Edge to set flg FIFO no empty
 						STATUS_CONT_MOD_ptr->FIFO_no_empty = 1;
 						REG302_ptr->buffer_empty = 0; //Buffer NO Empty
 						Write_reg302_D0_D7(*(uint32_t*)REG302_ptr, 0, 1, 0);

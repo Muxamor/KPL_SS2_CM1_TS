@@ -21,7 +21,7 @@
  }_ADC_DATA_Package; 
 
 
- #define FIFO_SIZE 8192
+ #define FIFO_SIZE 4096
 	
  typedef struct{
 
