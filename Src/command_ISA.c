@@ -43,7 +43,7 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 		Write_reg304_D0_D15( 0x01);
 	}
 
-	for(i=0; i<16; i++){
+	for(i=0; i < 16; i++){
 		analog_mod_config[i].power_module_on = (uint8_t)(( word2_D0_D15 >> i ) & 0x0001);
 	}
 
