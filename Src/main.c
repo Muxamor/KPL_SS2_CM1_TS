@@ -67,6 +67,7 @@ int main(void){
  	USART_TypeDef *USARTxx;
  	uint8_t addr_a_mod = 0;
  	uint8_t ret = 0;
+ 	ErrorStatus ret_AM_ADC;
  	uint16_t data_D0_D15;
 
 	LL_Init();
@@ -131,9 +132,13 @@ int main(void){
 						}
 
 						Data_transmite_UART_9B(array_u16 , 1,  USARTxx);
-						ADC_data_receive_UART(array_u8, 4, USARTxx);
+						ret_AM_ADC = ADC_data_receive_UART(array_u8, 4, USARTxx);
 
 						//TODO check answer, right address  
+						if(ret_AM_ADC == ERROR){//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							Error_Handler();
+						}
+
 
 						//TODO Check error flag. If lost synchronization need restart ADC.
 						ADC_data_package.head_byte = array_u8[0];
