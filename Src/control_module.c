@@ -359,6 +359,7 @@ uint8_t Write_FIFO( _FIFO  *FIFO_adc_data_ptr, _ADC_DATA_Package adc_package ){
 		if( FIFO_adc_data_ptr->FIFO_TAIL == FIFO_SIZE ){
 			FIFO_adc_data_ptr->FIFO_TAIL = 0; // New loop in FIFO
 		}
+		Error_Handler();
 
 		return 1;  // Error was overwrite buffer
 	}
@@ -398,7 +399,6 @@ void Clear_FIFO( _FIFO  *FIFO_adc_data_ptr ){
 	FIFO_adc_data_ptr->FIFO_HEAD = 0;
 	FIFO_adc_data_ptr->COUNT_DATA_IN_FIFO = 0;
 	FIFO_adc_data_ptr->FIFO_TAIL = 0; 
-
 }
 
 
