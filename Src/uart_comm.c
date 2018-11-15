@@ -72,10 +72,10 @@ uint32_t Data_receive_UART_9B(uint8_t size_rec_data , USART_TypeDef *USARTx){
 	uint16_t receive_data[4]= {0};
 	uint8_t i = 0;
 
-	/*if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
+	if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
 		LL_USART_ClearFlag_ORE(USARTx);
-		LL_USART_ReceiveData9(USARTx); //???????????????
-	}*/
+		LL_USART_ReceiveData9(USARTx); 
+	}
 
 	for( i = 0; i < size_rec_data; i++ ){
 
@@ -167,24 +167,48 @@ uint32_t Transfer_command_UART_9B(uint16_t tx_mass[], uint8_t size_tx_data, uint
     }while( i != 2 || ret_rx != 0xFFFFFFFF); 
 	
 	if( i == 2 || ret_rx == 0xFFFFFFFF){
+
+		Error_Handler();
 		return 0xFFFFFFFF;
 	}else{
+
 		return ret_rx;
 	}
 
 }
 
-/*
 
-uint32_t Transfer_ADC_data_UART_9B (uint16_t tx_mass[], uint8_t size_tx_data, uint8_t size_rx_data,  USART_TypeDef *USARTx){
+
+
+
+ErrorStatus Transfer_ADC_data_UART_9B (uint16_t tx_mass[], uint8_t size_tx_data, uint8_t rx_ADC_data[], uint8_t size_rx_data, uint8_t addr_analog_module ,USART_TypeDef *USARTx){
 
 	ErrorStatus ret_tx;
 	uint32_t ret_rx = 0;
 	uint8_t i = 0;
 
-    ????
+    do{ // Two attempt to get data ADC
+    	ret_tx = Data_transmite_UART_9B (tx_mass, size_tx_data, USARTx);
 
-}*/
+    	if(ret_tx == SUCCESS){
+			ADC_data_receive_UART(rx_ADC_data, size_rx_data , USARTx);
+		}
+
+		if(ret_tx == ERROR || ret_rx == ERROR || (rx_ADC_data [0]>> 3) != addr_analog_module ){
+			i++;
+		}
+
+    }while( i != 2 || ( ret_rx != SUCCESS && ((rx_ADC_data[0] >> 3) != addr_analog_module) )  ); 
+	
+	if( i == 2 || ret_rx == ERROR || ((rx_ADC_data[0] >> 3) != addr_analog_module ) ){
+		Error_Handler();
+		return ERROR;
+	}else{
+
+		return SUCCESS;
+	}
+
+}
 
 
 

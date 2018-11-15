@@ -131,11 +131,12 @@ int main(void){
 							USARTxx = USART3;
 						}
 
+						//ret_AM_ADC = Transfer_ADC_data_UART_9B (array_u16, 1, array_u8, 4, ddr_a_mod, USARTxx){ // Ask ADC data twice if was error
 						Data_transmite_UART_9B(array_u16 , 1,  USARTxx);
 						ret_AM_ADC = ADC_data_receive_UART(array_u8, 4, USARTxx);
-						//TO DO nees ask  again if we got error
 
-						if((ret_AM_ADC == ERROR) || (array_u8[0] >> 3 != addr_a_mod) ){
+						//if(ret_AM_ADC == ERROR ){
+						if(( ret_AM_ADC == ERROR ) || ( array_u8[0] >> 3 != addr_a_mod ) ){
 							Error_Handler();
 							ADC_data_package.head_byte = addr_a_mod<<3;
 							ADC_data_package.cyclic_code = loop_counter;

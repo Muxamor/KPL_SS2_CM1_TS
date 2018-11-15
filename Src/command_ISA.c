@@ -96,6 +96,8 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	mass[1] = 0x0000;
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
+
+	//tmp = Transfer_command_UART_9B( mass, 4, 4, USART3 );
 	Data_transmite_UART_9B (mass, 4,  USART3);
 	tmp = Data_receive_UART_9B (4, USART3);
 
@@ -135,8 +137,9 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	Data_transmite_UART_9B (mass , 4,  USARTn);
-	tmp = Data_receive_UART_9B (4 , USARTn);
+	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTn );
+	Data_transmite_UART_9B(mass , 4,  USARTn);
+	tmp = Data_receive_UART_9B(4 , USARTn);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTn == USART3 ){
@@ -246,8 +249,9 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	Data_transmite_UART_9B (mass , 4,  USARTx);
-	tmp = Data_receive_UART_9B (4 , USARTx);
+	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
+	Data_transmite_UART_9B(mass , 4,  USARTx);
+	tmp = Data_receive_UART_9B(4 , USARTx);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTx == USART3 ){
@@ -301,6 +305,7 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x00;
 	mass[3] = 0x00;
 
+	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
 	Data_transmite_UART_9B(mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B(4 , USARTx);
 
@@ -372,6 +377,7 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
+	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
 	Data_transmite_UART_9B(mass , 4,  USARTx);
 	tmp = Data_receive_UART_9B(4 , USARTx);
 
@@ -431,7 +437,7 @@ void ISA_Command_800( void ){
 	I2C_write_reg_TCA9554(I2C1, 0x20, 0x01, 0xFF); // ON/OFF analog module in block1, Address IC = 0x20
 	I2C_write_reg_TCA9554(I2C1, 0x26, 0x01,  0xFF); // ON/OFF analog module in block1, Address IC = 0x26
 	
-	/* Need command to send reset command to CM vodule in block 2
+	/* Need command to send reset command to CM module in block 2
 	mass[0] = 0x0006;
 	mass[1] = 0x0000;
 	mass[2] = 0x0000;
