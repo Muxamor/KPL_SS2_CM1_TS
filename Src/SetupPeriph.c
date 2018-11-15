@@ -191,7 +191,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_10);
-
 	/*For set/reset CLK302_1 need use  */
 	/*Set_CLK302_1()   				   */
 	/*Reset_CLK302_1()   	       	   */
@@ -206,7 +205,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_11);
-
 	/*For set/reset CLK302_2 need use  */
 	/*Set_CLK302_2()   				   */
 	/*Reset_CLK302_2()   	       	   */
@@ -222,7 +220,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_12);
-
 	/*For set/reset CLK302_3 need use  */
 	/*Set_CLK302_3()   				   */
 	/*Reset_CLK302_3()   	       	   */
@@ -238,7 +235,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_9);
-
 	/*For set/reset CLK304   need use  */
 	/*Set_CLK304()   				   */
 	/*Reset_CLK304()   	       	  	   */
@@ -254,7 +250,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_8);
-
 	/*For set/reset CLK304   need use  */
 	/*Set_EN304()   				   */
 	/*Reset_EN304()   	       	  	   */
@@ -269,7 +264,6 @@ void SetupGPIO(void){
 	LL_GPIO_Init(GPIOH, &GPIO_InitStruct);
 
 	LL_GPIO_SetOutputPin(GPIOH, LL_GPIO_PIN_1);
-
 	/*For set/reset CLK304   need use  */
 	/*Set_RST304()   				   */
 	/*Reset_RST304()   	       	  	   */
@@ -301,7 +295,7 @@ void SetupGPIO(void){
 	/*Read_INT2()  				   */
 
 
-	/* Configure RESET_reg302_b1_b2(PB0)               */
+	/* Configure RESET_reg302_b1_b2(PB0)               *//*
 	GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
 	GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
@@ -309,7 +303,7 @@ void SetupGPIO(void){
 	GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
 	LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_0);
+	LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_0);*/
 	/*For Reset Bit1 and Bit2 need use:   */
 	/*PULSE_RESET_reg302_b1_b2  		  */
 
@@ -381,7 +375,7 @@ void USART1_Init(void){
             - Hardware flow control disabled (RTS and CTS signals)
             - Receive and transmit enabled
       */
-  	USART_InitStruct.BaudRate = 10000000;//5000000;
+  	USART_InitStruct.BaudRate = 10000000;
   	USART_InitStruct.DataWidth =  LL_USART_DATAWIDTH_9B;
   	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
   	USART_InitStruct.Parity = LL_USART_PARITY_NONE;

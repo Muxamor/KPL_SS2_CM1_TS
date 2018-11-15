@@ -82,7 +82,7 @@ uint32_t Data_receive_UART_9B(uint8_t size_rec_data , USART_TypeDef *USARTx){
 		counter=0;
 		while( LL_USART_IsActiveFlag_RXNE(USARTx) == RESET ){
 			counter++;
-			if(counter==100000){
+			if(counter==50000){
 				Error_Handler();
 				LL_USART_ClearFlag_ORE(USARTx);
 				return 0xFFFFFFFF;
@@ -113,17 +113,18 @@ ErrorStatus ADC_data_receive_UART(uint8_t receive_data[], uint8_t size_rec_data 
 	uint16_t head_byte = 0;
 	uint8_t i=0;
 	
-	/*if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
+	if(LL_USART_IsActiveFlag_ORE(USARTx) == 1){
 		LL_USART_ClearFlag_ORE(USARTx);
-		LL_USART_ReceiveData9(USARTx); //???????????????
-	}*/
+		LL_USART_ReceiveData9(USARTx);
+	}
 
 	for( i = 0; i < size_rec_data; i++ ){
 		counter=0;
 		while( LL_USART_IsActiveFlag_RXNE(USARTx) == RESET ){
 			counter++;
-			if(counter==200000){
+			if(counter==1000){
 				Error_Handler();
+				//printf("i=%d \r\n ", i);
 				LL_USART_ClearFlag_ORE(USARTx);
 				return ERROR;
 			}

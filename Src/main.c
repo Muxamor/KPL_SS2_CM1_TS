@@ -29,6 +29,7 @@ uint8_t counter_ADC_data_ready; // counter of package
 
 int main(void){
 
+
 	_REG_302 reg_302 = {
 						.reg_304_ready_get_command     = 1, 
  						.harware_1bit_reg302		   = 0, 
@@ -81,8 +82,7 @@ int main(void){
 
 	Default_Setup_CM(REG302_ptr);
 
-	//Reset Interrupt and caunters;
-	FLAG_interrupt_INT3 = 0;
+	//Reset Interrupt and caunters;	FLAG_interrupt_INT3 = 0;
 	FLAG_interrupt_PULSE = 0;
 	loop_counter = 0;
 	counter_ADC_data_ready = 0;
@@ -133,18 +133,22 @@ int main(void){
 
 						Data_transmite_UART_9B(array_u16 , 1,  USARTxx);
 						ret_AM_ADC = ADC_data_receive_UART(array_u8, 4, USARTxx);
+						//TO DO nees ask  again if we got error
 
-						//TODO check answer, right address  
-						if(ret_AM_ADC == ERROR){//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						if((ret_AM_ADC == ERROR) || (array_u8[0] >> 3 != addr_a_mod) ){
 							Error_Handler();
+							ADC_data_package.head_byte = addr_a_mod<<3;
+							ADC_data_package.cyclic_code = loop_counter;
+							ADC_data_package.ADC_data_byte_MSB = 0;
+							ADC_data_package.ADC_data_byte_LSB = 0;
+
+						}else{
+							//TODO Check error flag. If lost synchronization need restart ADC.
+							ADC_data_package.head_byte = array_u8[0];
+							ADC_data_package.cyclic_code = loop_counter;
+							ADC_data_package.ADC_data_byte_MSB = array_u8[2];
+							ADC_data_package.ADC_data_byte_LSB = array_u8[3];
 						}
-
-
-						//TODO Check error flag. If lost synchronization need restart ADC.
-						ADC_data_package.head_byte = array_u8[0];
-						ADC_data_package.cyclic_code = loop_counter;
-						ADC_data_package.ADC_data_byte_MSB = array_u8[2];
-						ADC_data_package.ADC_data_byte_LSB = array_u8[3];
 
 						ret = Write_FIFO( FIFO_ADC_DATA_ptr, ADC_data_package );
 
