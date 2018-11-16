@@ -84,9 +84,10 @@ void Default_Setup_CM( _REG_302 *reg302_ptr ){
 	uint16_t mass[4] = {0x0006,0x0000,0x0000,0x0000};
 	uint32_t tmp = 0;
 
-	Data_transmite_UART_9B (mass, 4,  USART3);
-	tmp = Data_receive_UART_9B (4 , USART3);
 
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USART3 );
+	//Data_transmite_UART_9B (mass, 4,  USART3);
+	//tmp = Data_receive_UART_9B (4 , USART3);
 	if(tmp == 0xFFFFFFFF){
 		reg302_ptr->block2_ready = 0;
 	}else{

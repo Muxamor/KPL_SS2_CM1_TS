@@ -62,9 +62,9 @@ ErrorStatus ISA_Command_100( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	mass[2] = (word3_D0_D15>>8) & 0x00FF;
 	mass[3] = word3_D0_D15 & 0x00FF;
 
-	//tmp = Transfer_command_UART_9B ( mass, 4, 4, USART3);
-	Data_transmite_UART_9B ( mass , 4,  USART3);
-	tmp = Data_receive_UART_9B (4 , USART3);
+	tmp = Transfer_command_UART_9B ( mass, 4, 4, USART3);
+	//Data_transmite_UART_9B ( mass , 4,  USART3);
+	//tmp = Data_receive_UART_9B (4 , USART3);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01 ){
 		reg302_ptr->block2_ready = 0;
@@ -97,9 +97,9 @@ ErrorStatus ISA_Command_200( _REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_m
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	//tmp = Transfer_command_UART_9B( mass, 4, 4, USART3 );
-	Data_transmite_UART_9B (mass, 4,  USART3);
-	tmp = Data_receive_UART_9B (4, USART3);
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USART3 );
+	//Data_transmite_UART_9B (mass, 4,  USART3);
+	//tmp = Data_receive_UART_9B (4, USART3);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01 ){
 		reg302_ptr->block2_ready = 0;
@@ -137,9 +137,9 @@ ErrorStatus ISA_Command_400( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTn );
-	Data_transmite_UART_9B(mass , 4,  USARTn);
-	tmp = Data_receive_UART_9B(4 , USARTn);
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USARTn );
+	//Data_transmite_UART_9B(mass , 4,  USARTn);
+	//tmp = Data_receive_UART_9B(4 , USARTn);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTn == USART3 ){
@@ -249,9 +249,9 @@ ErrorStatus ISA_Command_500( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
-	Data_transmite_UART_9B(mass , 4,  USARTx);
-	tmp = Data_receive_UART_9B(4 , USARTx);
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
+	//Data_transmite_UART_9B(mass , 4,  USARTx);
+	//tmp = Data_receive_UART_9B(4 , USARTx);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTx == USART3 ){
@@ -305,9 +305,9 @@ ErrorStatus ISA_Command_600( uint16_t word1_D0_D15, _REG_302 *reg302_ptr, _ANALO
 	mass[2] = 0x00;
 	mass[3] = 0x00;
 
-	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
-	Data_transmite_UART_9B(mass , 4,  USARTx);
-	tmp = Data_receive_UART_9B(4 , USARTx);
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
+	//Data_transmite_UART_9B(mass , 4,  USARTx);
+	//tmp = Data_receive_UART_9B(4 , USARTx);
 
 	if(tmp == 0xFFFFFFFF || ((uint8_t)(tmp >> 16)) != 0x01){
 		if( USARTx == USART3 ){
@@ -377,9 +377,9 @@ ErrorStatus ISA_Command_700( uint16_t word1_D0_D15, _REG_302 *reg302_ptr ){
 	mass[2] = 0x0000;
 	mass[3] = 0x0000;
 
-	//tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
-	Data_transmite_UART_9B(mass , 4,  USARTx);
-	tmp = Data_receive_UART_9B(4 , USARTx);
+	tmp = Transfer_command_UART_9B( mass, 4, 4, USARTx );
+	//Data_transmite_UART_9B(mass , 4,  USARTx);
+	//tmp = Data_receive_UART_9B(4 , USARTx);
 
 	if( tmp == 0xFFFFFFFF ){
 		if( USARTx == USART3 ){

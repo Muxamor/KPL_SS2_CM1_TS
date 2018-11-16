@@ -162,45 +162,48 @@ uint32_t Transfer_command_UART_9B(uint16_t tx_mass[], uint8_t size_tx_data, uint
 
 		if(ret_tx == ERROR || ret_rx == 0xFFFFFFFF){
 			i++;
+			if( i == 2 ){
+				break;
+			}
 		}
 
-    }while( i != 2 || ret_rx != 0xFFFFFFFF); 
+    }while( ret_rx == 0xFFFFFFFF );
 	
-	if( i == 2 || ret_rx == 0xFFFFFFFF){
-
+	if( i == 2 || ret_rx == 0xFFFFFFFF ){
 		Error_Handler();
 		return 0xFFFFFFFF;
 	}else{
-
 		return ret_rx;
 	}
 
 }
 
 
-
-
-
 ErrorStatus Transfer_ADC_data_UART_9B (uint16_t tx_mass[], uint8_t size_tx_data, uint8_t rx_ADC_data[], uint8_t size_rx_data, uint8_t addr_analog_module ,USART_TypeDef *USARTx){
 
-	ErrorStatus ret_tx;
-	uint32_t ret_rx = 0;
+	ErrorStatus ret_tx, ret_rx;
 	uint8_t i = 0;
+	uint8_t addr_am_rx = 0;
 
     do{ // Two attempt to get data ADC
     	ret_tx = Data_transmite_UART_9B (tx_mass, size_tx_data, USARTx);
 
     	if(ret_tx == SUCCESS){
-			ADC_data_receive_UART(rx_ADC_data, size_rx_data , USARTx);
+    		ret_rx = ADC_data_receive_UART(rx_ADC_data, size_rx_data , USARTx);
 		}
 
-		if(ret_tx == ERROR || ret_rx == ERROR || (rx_ADC_data [0]>> 3) != addr_analog_module ){
+    	addr_am_rx = rx_ADC_data [0] >> 3;
+
+		if( ret_tx == ERROR || ret_rx == ERROR ||  addr_am_rx != addr_analog_module ){
 			i++;
+			if( i == 2 ){
+				break;
+			}
 		}
 
-    }while( i != 2 || ( ret_rx != SUCCESS && ((rx_ADC_data[0] >> 3) != addr_analog_module) )  ); 
+    }while( ret_rx == ERROR || addr_am_rx != addr_analog_module );
 	
-	if( i == 2 || ret_rx == ERROR || ((rx_ADC_data[0] >> 3) != addr_analog_module ) ){
+	if( i == 2 || ret_rx == ERROR || addr_am_rx != addr_analog_module ){
 		Error_Handler();
 		return ERROR;
 	}else{
