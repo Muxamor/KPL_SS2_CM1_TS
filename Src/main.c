@@ -73,10 +73,7 @@ int main(void){
 
 	LL_Init();
 	SystemClock_Config(); //Setup system clock at 80 MHz
-
 	SetupGPIO();
-
-	while(1);
 	USART1_Init();
 	USART3_Init();
 	I2C1_Init();
@@ -93,6 +90,7 @@ int main(void){
 	//LL_IWDG_ReloadCounter(IWDG);
 
 	while(1){
+		LL_IWDG_ReloadCounter(IWDG);
 
 		//Processing command from PC 
 		if( FLAG_interrupt_INT3 == 1 ){
@@ -105,6 +103,8 @@ int main(void){
 		//Sart mode, Read data ADC from analog modules and put to FIFO buffer
 		if(FLAG_interrupt_PULSE == 1 && STATUS_CONT_MOD_ptr-> cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->cm_check_status_analog_mod == 0 ){
 			FLAG_interrupt_PULSE = 0;
+
+			LL_IWDG_ReloadCounter(IWDG);
 
 			if(counter_ADC_data_ready < 76){
 
@@ -121,6 +121,7 @@ int main(void){
 					}
 				}
 			}else{
+				LL_IWDG_ReloadCounter(IWDG);
 				//Read ADC data from analogs modules and put to FIFO buf. Also need check error flag in ADC package from modules. 
 				for( addr_a_mod = 0; addr_a_mod < 32; addr_a_mod++ ){
 
@@ -182,10 +183,12 @@ int main(void){
 		//Start mode. Send data to ISA if we have data more than half buffer.
 		if( STATUS_CONT_MOD_ptr->cm_state_start_stop == 1 && STATUS_CONT_MOD_ptr->FIFO_no_empty == 1 ){
 
+
 			if( Read_pin_INT2() == 1 || STATUS_CONT_MOD_ptr->first_adc_package == 1 ){
 
 				STATUS_CONT_MOD_ptr->first_adc_package = 0;
 
+				LL_IWDG_ReloadCounter(IWDG);
 				ADC_data_package = Read_FIFO( FIFO_ADC_DATA_ptr );
 
 				data_D0_D15 = (ADC_data_package.head_byte << 8) | ADC_data_package.cyclic_code;
