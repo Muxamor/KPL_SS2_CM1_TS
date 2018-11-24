@@ -78,7 +78,7 @@ int main(void){
 	USART3_Init();
 	I2C1_Init();
 	SetupInterrupt();
-	//IWDG_Init();
+	IWDG_Init();
 
 	Default_Setup_CM(REG302_ptr);
 
