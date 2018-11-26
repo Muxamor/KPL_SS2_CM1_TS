@@ -47,6 +47,7 @@ int main(void){
 	 										   .cm_state_start_stop = 0,
  											   .first_adc_package = 1,
 											   .FIFO_no_empty = 0,
+											   .restriction_settings_Fcut = 0,
 											 };
 
 	 _STATUS_CONTROL_MODULE *STATUS_CONT_MOD_ptr = &stat_contr_mod;

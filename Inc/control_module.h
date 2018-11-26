@@ -38,6 +38,7 @@
  	uint8_t cm_check_status_analog_mod; //1=need check status analog modules
  	uint8_t first_adc_package; // 1=first ADC package after reset module  0 = not first
  	uint8_t FIFO_no_empty; // 1=if buffer half filled
+ 	uint8_t restriction_settings_Fcut; //0=no restriction   1=resriction Fcut=1-3, 30, 40, 70   2=resriction Fcut=1
 	
  }_STATUS_CONTROL_MODULE; 
 

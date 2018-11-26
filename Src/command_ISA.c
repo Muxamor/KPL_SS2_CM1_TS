@@ -548,7 +548,53 @@ ErrorStatus ISA_Command_B00( uint16_t word1_D0_D15 ){
 
 	return SUCCESS; 
 }
+ 
+ //Plug for Server. In this version not need use this comand because we have no communictaion problem.
+ErrorStatus ISA_Command_E00( uint16_t word1_D0_D15, _STATUS_CONTROL_MODULE *status_control_mod, _REG_302 *reg302_ptr ){
 
+	uint8_t read_write_command=0; // 0=write, 1=read 
+	//uint16_t word2_D0_D15 = 0;
+	uint16_t word3_D0_D15 = 0;
+
+	read_write_command = (uint8_t)word1_D0_D15;
+
+	//Answer at the 1 word command 600
+	Write_reg304_D0_D15( 0x01);
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
+
+
+	if( wait_interrupt_INT3() ){
+		Error_Handler();
+		return ERROR;
+	}
+
+	//word2_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+	Read_reg304_D0_D15();
+
+	//Answer at the 2 word command E00
+	Write_reg304_D0_D15( 0x01);
+	reg302_ptr->reg_304_ready_get_command = 1;
+	Write_reg302_D0_D7 ( *(uint32_t*)reg302_ptr, 1, 0, 0 );
+	
+
+	if( wait_interrupt_INT3() ){
+		Error_Handler();
+		return ERROR;
+	}
+
+	word3_D0_D15 = (uint16_t) Read_reg304_D0_D15();
+
+	//Answer at the 3 word command E00
+	if( read_write_command == 0 ){
+		status_control_mod->restriction_settings_Fcut = (uint8_t)word3_D0_D15;
+		Write_reg304_D0_D15( 0x01);
+	}else{
+		Write_reg304_D0_D15( (uint16_t)(status_control_mod->restriction_settings_Fcut) );
+	}
+
+	return SUCCESS; 
+}
 
 
 

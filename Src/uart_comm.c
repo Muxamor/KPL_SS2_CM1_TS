@@ -181,7 +181,7 @@ uint32_t Transfer_command_UART_9B(uint16_t tx_mass[], uint8_t size_tx_data, uint
 
 ErrorStatus Transfer_ADC_data_UART_9B (uint16_t tx_mass[], uint8_t size_tx_data, uint8_t rx_ADC_data[], uint8_t size_rx_data, uint8_t addr_analog_module ,USART_TypeDef *USARTx){
 
-	ErrorStatus ret_tx, ret_rx;
+	ErrorStatus ret_tx, ret_rx = ERROR;
 	uint8_t i = 0;
 	uint8_t addr_am_rx = 0;
 

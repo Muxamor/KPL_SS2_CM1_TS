@@ -327,6 +327,10 @@ void Get_Parse_ISA_command (_REG_302 *reg302_ptr, _ANALOG_MODULE_CONF  analog_mo
 				ISA_Command_B00(word1_D0_D15);
 				break;
 
+			case 0x0E:
+				ISA_Command_E00(word1_D0_D15, stat_cont_mod, reg302_ptr);
+				break;
+
 			default:
 				Error_Handler();
 				Write_reg304_D0_D15(0x02);
